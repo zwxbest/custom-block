@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" type="text/css" href="./css/index.css"/>
+		<script type="text/javascript" src="src/CustomBlocker.js"></script>
+		<title>CustomBlocker</title>
+	</head>
+	<body style="width:480px;">
+		<div id="header" class="header">
+			<div class="menu">
+				<input type="radio" name="extenstion_enable" id="buttonOn"/>
+				<label for="">ON</label>
+				<input type="radio" name="extenstion_enabled" id="buttonOff" />
+				<label for="">OFF</label>
+				<a href="#" id="buttonOpenPreferenceTop"><span class="custom_filter_localize_preference">Preferences</span></a>
+			</div>
+			<h1><img src="img/top_title.png" width="156"/></h1>
+		</div>
+		<div id="content">
+			<div id="ruleSection">
+				<div id="ruleSectionHeader">
+					<h2><span class="custom_filter_localize_activeRules">Active Rules</span></h2>
+				</div>
+				<ul id="activeRules">
+				</ul>
+			</div>
+			<div id="version">Version <span id="versionLabel"></span></div>
+			<div>
+				<a id="buttonCreateRule"
+					class="custom_filter_localize_newRuleForThisSite uiButtonAdd">Create a new rule for this site</a>
+			</div>
+
+			<div class="note note--dismissable" note_key="KeywordGroupHeadline">
+				<a href="pref/word_group.html" target="_blank" class="note__link custom_filter_localize_helpKeywordGroupHeadline">"Keyword groups" feature is supported in version 4.x!</a>
+				<a href="#" class="note__dismiss">x</a>
+			</div>
+		</div>
+		<script type="text/javascript" src="src/index.js"></script>
+		<script type="text/javascript" src="src/analytics.js"></script>
+	</body>
+</html>

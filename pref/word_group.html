@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Word Groups | CustomBlocker</title>
+    <link rel="stylesheet" type="text/css" href="../css/pref/list_rules.css">
+    <link rel="stylesheet" type="text/css" href="../css/pref/help.css">
+    <link rel="stylesheet" type="text/css" href="../css/rule_editor.css">
+    <link rel="stylesheet" type="text/css" href="../css/rule_editor_common.css">
+    <link rel="stylesheet" type="text/css" href="../css/keywords.css">
+    <script type="text/javascript" src="../src/CustomBlocker.js"></script>
+    <script type="text/javascript" src="../src/pref/list_rules.js"></script>
+    <script type="text/javascript" src="../src/pref/word_editor.js"></script>
+    <script type="text/javascript" src="../src/pref/word_group.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <h1 class="header__title"><img src="../img/top_title.png" alt="CustomBlocker for Google Chrome"></h1>
+      <div class="header__donate"><a class="custom_filter_localize_donate" id="donate_link" href="#donate">Donate</a></div>
+      <nav class="header__tabs">
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" href="index.html?p=p4"><span class="custom_filter_localize_prefTitle">Manage Rules</span></a></div>
+        <div class="header__tabs__tab header__tabs__tab--selected"><a class="header__tabs__tab__link" id="word_group_link" href="word_group.html"><span class="custom_filter_localize_word_group">Word Groups</span></a></div>
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="help_link" href="help_en.html"><span class="custom_filter_localize_help">Help</span></a></div>
+      </nav>
+    </header>
+    <div class="note note--dismissable" note_key="KeywordGroupHeadline"><span class="custom_filter_localize_helpKeywordGroupDetail">"Keyword groups" feature is supported in version 4.x!</span><a class="note__dismiss" id="js_note_close" href="#">x</a></div>
+    <div id="prefMain">
+      <!--  List & Editor-->
+      <div class="editor-frame">
+        <div class="editor-frame__editor">
+          <div class="rule-editor-body customblocker_rule_dialog" id="rule_editor_body">
+            <div class="section rule-editor-body__section">
+              <h3><span class="custom_filter_localize_sectionRuleTitle">Title</span></h3>
+              <input id="rule_editor_title" type="text">
+            </div>
+            <div class="section rule-editor-body__section">
+              <h3><span class="custom_filter_localize_sectionWord text">Words</span></h3>
+              <div>
+                <input id="rule_editor_keyword" type="text">
+                <input class="uiButton" id="rule_editor_add_keyword_button" type="button" value="ADD">
+              </div>
+              <div>
+                <!--  Complete Matching-->
+                <input id="rule_editor_keyword_complete_matching_checkbox" type="checkbox">
+                <label for="rule_editor_keyword_complete_matching_checkbox"><span class="custom_filter_localize_complete_matching">Complete Match</span></label>
+                <!--  RegExp-->
+                <input id="rule_editor_keyword_regexp_checkbox" type="checkbox">
+                <label for="rule_editor_keyword_regexp_checkbox"><span class="custom_filter_localize_regex">RegEx</span></label>
+                <!--  Ignore Case-->
+                <input id="rule_editor_keyword_case_sensitive_checkbox" type="checkbox">
+                <label for="rule_editor_keyword_case_sensitive_checkbox"><span class="custom_filter_localize_case_sensitive">Case Sensitive</span></label>
+                <!--  Include link URL-->
+                <input id="rule_editor_keyword_include_href_checkbox" type="checkbox">
+                <label for="rule_editor_keyword_include_href_checkbox"><span class="custom_filter_localize_include_href">Include URL</span></label>
+              </div>
+              <div class="smart_rule_editor_keywords" id="rule_editor_keywords"></div>
+            </div>
+            <div id="rule_editor_alert">
+              <!--  Alert Message-->
+            </div>
+            <div class="bottom_button_container">
+              <input class="uiButton" id="rule_editor_save_button" type="button" value="Save">
+            </div>
+          </div>
+          <!--  rule_editor_body-->
+        </div>
+        <div class="editor-frame__list">
+          <div><a class="uiButton uiButtonAdd custom_filter_localize_newGroup" id="js_word_group_create_button" href="javascript:void(0)">New group</a></div>
+          <ul class="rule-list" id="js_rule-list"></ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="../src/analytics.js"></script>
+  </body>
+</html>

@@ -1,0 +1,209 @@
+@charset "UTF-8";
+.button-container {
+  float: right;
+  width: 120px;
+  height: inherit;
+  text-align: right;
+  height: inherit;
+  margin: 2px 0 0;
+  padding: 0px;
+  width: 175px;
+  line-height: 17px; }
+  .button-container input {
+    border: none;
+    text-indent: -9999px;
+    background: none;
+    margin: 0 0.2rem; }
+  .button-container input.buttonOn {
+    background-image: url("/img/button/on.png");
+    background-size: 42px 13px;
+    background-repeat: no-repeat;
+    width: 42px;
+    height: 13px; }
+  .button-container input.buttonOff {
+    background-image: url("/img/button/off.png");
+    background-size: 42px 13px;
+    background-repeat: no-repeat;
+    width: 42px;
+    height: 13px; }
+  .button-container input.buttonEdit {
+    background-image: url("/img/button/edit.png");
+    background-size: 14px 14px;
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px; }
+  .button-container input.buttonDelete {
+    background-image: url("/img/button/delete.png");
+    background-size: 14px 14px;
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px; }
+
+/* Default visibility */
+li div.button-container .exampleUrl, li div.button-container .buttonDelete, li div.button-container .buttonEdit {
+  visibility: hidden; }
+
+/* Hover styles */
+li:hover .button-container .exampleUrl, li:hover .button-container .buttonDelete, li:hover .button-container .buttonEdit {
+  visibility: visible; }
+
+body {
+  margin: 0px;
+  padding: 0px;
+  font-family: 'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN W3','YuGothic','Yu Gothic','メイリオ','Meiryo','ＭＳ ゴシック','Lucida Grande', 'Helvetica', 'Arial', sans-serif; }
+
+.header {
+  height: 30px;
+  line-height: 30px;
+  padding-top: 7px;
+  padding-right: 6px; }
+  .header .menu {
+    width: 280px;
+    height: inherit;
+    float: right;
+    text-align: right;
+    font-size: 10px; }
+  .header h1 {
+    font-size: 1.4px;
+    margin-right: 200px;
+    width: auto;
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-bottom: 0px;
+    padding: 0px;
+    height: inherit;
+    color: #333;
+    margin-left: 4px;
+    font-weight: normal; }
+
+a {
+  text-decoration: none;
+  color: #0db3ea;
+  font-size: 120%; }
+
+#content {
+  padding: 7px; }
+
+h2 {
+  font-size: 12px;
+  width: auto;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-bottom: 0px;
+  padding: 0px;
+  font-weight: normal;
+  display: inline; }
+
+/*
+Applied Rules
+*/
+#ruleSection {
+  margin-bottom: 6px; }
+
+#ruleSectionHeader {
+  line-height: 22px;
+  height: 22px;
+  color: #333;
+  font-weight: bold;
+  text-indent: 4px;
+  font-size: 13px;
+  border-bottom: solid 1px #ddd; }
+
+#ruleSectionFooter {
+  text-align: right; }
+
+#ruleSectionFooter a {
+  color: #666;
+  font-size: 80%;
+  padding-right: 6px;
+  text-decoration: none; }
+
+.rule-list li {
+  height: 24px;
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+  position: relative;
+  clear: both; }
+
+#activeRules {
+  margin: 0px;
+  padding: 0px; }
+  #activeRules li {
+    height: 27px;
+    line-height: 27px;
+    list-style-type: none;
+    clear: both;
+    font-size: 90%;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd; }
+    #activeRules li .title {
+      margin-left: 25px;
+      margin-right: 122px;
+      vertical-align: middle;
+      height: inherit;
+      color: #222; }
+    #activeRules li .count {
+      height: 14px;
+      margin-top: 6px;
+      line-height: 14px;
+      margin-left: 2px;
+      margin-right: 2px;
+      width: 18px;
+      text-align: center;
+      color: white;
+      font-size: 10px;
+      float: left; }
+    #activeRules li .hit {
+      background-color: #fe376c; }
+    #activeRules li .noHit {
+      background-color: #959595; }
+  #activeRules li.empty {
+    line-height: 24px;
+    font-size: 80%;
+    text-indent: 4px;
+    color: #444; }
+
+#version {
+  color: #444;
+  text-align: right;
+  float: right;
+  width: 100px;
+  font-size: 80%;
+  line-height: 150%; }
+
+#buttonCreateRule {
+  color: #666666;
+  background-image: url(../img/button/add.png) !important;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  text-indent: 20px;
+  display: inline-block;
+  height: 16px;
+  font-size: 14px;
+  text-decoration: none;
+  margin: 0.5em 0; }
+  #buttonCreateRule:hover {
+    text-decoration: underline; }
+
+.note {
+  background-color: #cdedf8 !important;
+  border: solid 1px #249bc3 !important;
+  padding: 0.5em;
+  position: relative;
+  color: #249bc3;
+  display: none; }
+  .note__link {
+    color: #249bc3; }
+  .note__dismiss {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url(../../img/keyword_delete.png) !important;
+    background-repeat: no-repeat;
+    background-position: 4px 4px;
+    background-size: 7px 7px !important;
+    text-indent: -9999px;
+    position: absolute;
+    top: 0;
+    right: 0; }
