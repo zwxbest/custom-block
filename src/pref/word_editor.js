@@ -18,7 +18,7 @@ var WordEditor = (function () {
         if (word.is_include_href) {
             span.appendChild(CustomBlockerUtil.createKeywordOptionIcon("keyword_include_href", suffix, "include_href"));
         }
-        span.innerHTML += CustomBlockerUtil.escapeHTML(word.word);
+        span.innerHTML += CustomBlockerUtil.    escapeHTML(word.word);
         span.className = 'word '
             + ((word.is_complete_matching) ? 'complete_matching' : 'not_complete_matching');
         var deleteButton = CustomBlockerUtil.createDeleteButton();

@@ -103,6 +103,18 @@
 #rule_editor_test_button:active {
   background-color: #2aa440 !important; }
 
+#rule_editor_export_button {
+  background-color: orange !important; }
+
+#rule_editor_export_button:active {
+  background-color: #fbe496 !important; }
+
+#rule_editor_import_button {
+  background-color: #2aa440 !important; }
+
+#rule_editor_import_button:active {
+  background-color: #44dd44 !important; }
+
 #rule_editor_close_button {
   background-color: #959595 !important; }
 

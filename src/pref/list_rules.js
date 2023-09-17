@@ -1,6 +1,7 @@
 var allRules = [];
 var ruleContainerList = new Array();
 var ruleEditor;
+
 function manualMigration() {
     chrome.storage.local.get(["migrationDone"], function (result) {
         if (!result["migrationDone"]) {
@@ -12,6 +13,7 @@ function manualMigration() {
         }
     });
 }
+
 function onStart() {
     document.getElementById('help_link').setAttribute("href", 'help_' + chrome.i18n.getMessage('extLocale') + '.html');
     document.getElementById('donate_link').setAttribute("href", 'help_' + chrome.i18n.getMessage('extLocale') + '.html#donate');
@@ -26,8 +28,7 @@ function onStart() {
     document.getElementById('buttonBadgeOff').addEventListener('change', refreshBadgeEnabled, false);
     if ("true" == localStorage.badgeDisabled) {
         document.getElementById('buttonBadgeOff').setAttribute("checked", "true");
-    }
-    else {
+    } else {
         document.getElementById('buttonBadgeOn').setAttribute("checked", "true");
     }
     ruleEditor = new PrefRuleEditor();
@@ -35,19 +36,24 @@ function onStart() {
     ruleEditor.init();
     window.setTimeout(manualMigration, 1000);
 }
+
 function refreshBadgeEnabled() {
     var isBadgeOn = document.getElementById('buttonBadgeOn').checked;
     localStorage.badgeDisabled = (isBadgeOn) ? "false" : "true";
 }
+
 function showEmptyAlert() {
     document.getElementById('js_rule-list').style.display = 'none';
     document.getElementById('ruleEmptyAlert').style.display = 'block';
 }
+
 function hideEmptyAlert() {
     document.getElementById('js_rule-list').style.display = 'block';
     document.getElementById('ruleEmptyAlert').style.display = 'none';
 }
+
 var prevFilterString = null;
+
 function renderRules() {
     for (var _i = 0, ruleContainerList_1 = ruleContainerList; _i < ruleContainerList_1.length; _i++) {
         var container = ruleContainerList_1[_i];
@@ -56,9 +62,11 @@ function renderRules() {
         document.getElementById('js_rule-list').appendChild(element);
     }
 }
+
 function search() {
     applyFilter(document.getElementById('search_box').value);
 }
+
 function applyFilter(filterString) {
     if (prevFilterString == filterString)
         return;
@@ -71,6 +79,7 @@ function applyFilter(filterString) {
     }
     showCount();
 }
+
 function showCount() {
     var visibleCount = 0;
     for (var i = 0, l = ruleContainerList.length; i < l; i++) {
@@ -80,17 +89,20 @@ function showCount() {
     document.getElementById('activeRuleCount').innerHTML = String(visibleCount);
     document.getElementById('totalRuleCount').innerHTML = String(ruleContainerList.length);
 }
+
 function isMatched(rule, filterString) {
     if (null == filterString || '' == filterString)
         return true;
     filterString = filterString.toLowerCase();
     return (isMatchedByRule(rule, filterString) || isMatchedByWords(rule, filterString));
 }
+
 function isMatchedByRule(rule, filterString) {
     return (rule.title.toLowerCase().indexOf(filterString) >= 0 ||
         rule.site_regexp.toLowerCase().indexOf(filterString) >= 0 ||
         rule.example_url.toLowerCase().indexOf(filterString) >= 0);
 }
+
 function isMatchedByWords(rule, filterString) {
     if (!rule.words)
         return false;
@@ -100,6 +112,7 @@ function isMatchedByWords(rule, filterString) {
     }
     return false;
 }
+
 function deselectAll() {
     for (var _i = 0, ruleContainerList_2 = ruleContainerList; _i < ruleContainerList_2.length; _i++) {
         var container = ruleContainerList_2[_i];
@@ -107,6 +120,7 @@ function deselectAll() {
         container.applyClassName();
     }
 }
+
 function removeElement(element) {
     for (var i = 0; i < ruleContainerList.length; i++) {
         if (ruleContainerList[i] == element) {
@@ -115,12 +129,14 @@ function removeElement(element) {
         }
     }
 }
+
 var RuleContainer = (function () {
     function RuleContainer(rule) {
         this.rule = rule;
         this.liElement = null;
         this.filtered = false;
     }
+
     RuleContainer.prototype.deselect = function () {
         this.selected = false;
     };
@@ -154,6 +170,7 @@ var RuleContainer = (function () {
         var titleDiv = document.createElement('DIV');
         titleDiv.className = 'title';
         titleDiv.innerHTML = CustomBlockerUtil.shorten(this.rule.title, 42);
+
         var urlDiv = document.createElement('DIV');
         urlDiv.className = 'url';
         urlDiv.innerHTML = CustomBlockerUtil.shorten(this.rule.site_regexp, 36);
@@ -165,8 +182,7 @@ var RuleContainer = (function () {
             span.innerHTML = chrome.i18n.getMessage('blockAnyway');
             span.className = 'keyword blockAnyway';
             keywordsDiv.appendChild(span);
-        }
-        else {
+        } else {
             for (var _i = 0, _a = this.rule.words; _i < _a.length; _i++) {
                 var word = _a[_i];
                 var keywordSpan = document.createElement('SPAN');
@@ -246,7 +262,8 @@ var RuleContainer = (function () {
         return function (event) {
             event.stopPropagation();
             if (window.confirm(chrome.i18n.getMessage('dialogDelete'))) {
-                cbStorage.deleteRule(_this.rule, function () { });
+                cbStorage.deleteRule(_this.rule, function () {
+                });
                 _this.liElement.parentNode.removeChild(_this.liElement);
                 removeElement(_this);
                 showCount();
@@ -256,6 +273,7 @@ var RuleContainer = (function () {
     };
     return RuleContainer;
 }());
+
 function refreshPathSections() {
     var hideByXPath = document.getElementById('rule_editor_radio_hide_xpath').checked;
     var searchByXPath = document.getElementById('rule_editor_radio_search_xpath').checked;
@@ -269,8 +287,7 @@ var reloadBackground = function () {
     try {
         var bgWindow = chrome.extension.getBackgroundPage();
         bgWindow.reloadLists();
-    }
-    catch (ex) {
+    } catch (ex) {
         alert(ex);
     }
 };
@@ -284,6 +301,11 @@ var PrefRuleEditor = (function () {
         document.getElementById('rule_editor_block_anyway_false').addEventListener('change', PrefRuleEditor.setVisibilityOfConditionDetail, false);
         this.wordEditor = new WordEditor();
         var self = this;
+
+        document.getElementById('rule_editor_export_button').addEventListener('click', self.exportRules, false);
+        document.getElementById('rule_editor_import_button').addEventListener('click', self.importRules, false);
+
+
         this.wordEditor.addWordHandler = function (word) {
             word.rule_id = self.rule.rule_id;
             cbStorage.addWordToRule(self.rule, word);
@@ -292,6 +314,7 @@ var PrefRuleEditor = (function () {
             cbStorage.removeWordFromRule(self.rule, word);
         };
     }
+
     PrefRuleEditor.prototype.init = function () {
         var _this = this;
         var self = this;
@@ -317,6 +340,47 @@ var PrefRuleEditor = (function () {
             showCount();
         });
     };
+
+    PrefRuleEditor.prototype.exportRules = function () {
+        var _this = this;
+        var self = this;
+
+        cbStorage.loadAll(function (rules, groups) {
+            if (!rules || rules.length === 0) {
+                showEmptyAlert();
+            }
+            allRules = rules;
+            str = JSON.stringify(allRules)
+            chrome.downloads.download({
+                url: "data:application/json," + str,
+                filename: "custom-blocker-rules.json",
+                conflictAction: "overwrite",
+            }, function (id) {
+
+            });
+        });
+    }
+
+    PrefRuleEditor.prototype.importRules = function () {
+        var _this = this;
+        var self = this;
+
+        rulesjson = document.getElementById('rule_editor_import_text').value;
+        let rules = []
+        try {
+            rules = JSON.parse(rulesjson)
+        }catch (e){
+            alert("导入配置格式不正确")
+        }
+        console.log(rules)
+
+        for (var i in rules) {
+            console.log(rules[i])
+            cbStorage.saveRule(rules[i],null)
+        }
+
+    }
+
     PrefRuleEditor.prototype.removeGroup = function (group) {
         for (var groupId = 0; groupId < this.rule.wordGroups.length; groupId++) {
             if (this.rule.wordGroups[groupId].global_identifier == group.global_identifier) {
@@ -331,8 +395,12 @@ var PrefRuleEditor = (function () {
         var _this = this;
         document.getElementById("rule_editor_keyword_groups").innerHTML = "";
         groups.forEach(function (group) {
-            CustomBlockerUtil.createWordGroupElement(group, function () { _this.removeGroup(group); });
-            document.getElementById("rule_editor_keyword_groups").appendChild(CustomBlockerUtil.createWordGroupElement(group, function () { _this.removeGroup(group); }));
+            CustomBlockerUtil.createWordGroupElement(group, function () {
+                _this.removeGroup(group);
+            });
+            document.getElementById("rule_editor_keyword_groups").appendChild(CustomBlockerUtil.createWordGroupElement(group, function () {
+                _this.removeGroup(group);
+            }));
         });
     };
     PrefRuleEditor.setVisibilityOfConditionDetail = function () {
@@ -378,8 +446,12 @@ var PrefRuleEditor = (function () {
         var _this = this;
         document.getElementById("rule_editor_keyword_groups").innerHTML = "";
         groups.forEach(function (group) {
-            CustomBlockerUtil.createWordGroupElement(group, function () { _this.removeGroup(group); });
-            document.getElementById("rule_editor_keyword_groups").appendChild(CustomBlockerUtil.createWordGroupElement(group, function () { _this.removeGroup(group); }));
+            CustomBlockerUtil.createWordGroupElement(group, function () {
+                _this.removeGroup(group);
+            });
+            document.getElementById("rule_editor_keyword_groups").appendChild(CustomBlockerUtil.createWordGroupElement(group, function () {
+                _this.removeGroup(group);
+            }));
         });
     };
     PrefRuleEditor.prototype.createOption = function (label, value) {
