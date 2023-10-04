@@ -101,7 +101,7 @@ var CustomBlockerUtil = (function () {
     CustomBlockerUtil.getRuleDetailTip = function (rule) {
         if (rule.block_anyway)
             return chrome.i18n.getMessage('blockAnyway');
-        if (null == rule.words || rule.words.length == 0)
+        if ((null == rule.words || rule.words.length == 0) && (null == rule.wordGroups || rule.wordGroups.length == 0))
             return null;
         var lines = new Array();
         var wordStrings = new Array();

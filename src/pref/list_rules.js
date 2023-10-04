@@ -302,8 +302,8 @@ var PrefRuleEditor = (function () {
         this.wordEditor = new WordEditor();
         var self = this;
 
-        document.getElementById('rule_editor_export_button').addEventListener('click', self.exportRules, false);
-        document.getElementById('rule_editor_import_button').addEventListener('click', self.importRules, false);
+        document.getElementById('rule_editor_export_button').addEventListener('click', () => this.exportRules(this), false);
+        document.getElementById('rule_editor_import_button').addEventListener('click', () => this.importRules(this), false);
 
 
         this.wordEditor.addWordHandler = function (word) {
@@ -341,44 +341,35 @@ var PrefRuleEditor = (function () {
         });
     };
 
-    PrefRuleEditor.prototype.exportRules = function () {
-        var _this = this;
-        var self = this;
-
-        cbStorage.loadAll(function (rules, groups) {
-            if (!rules || rules.length === 0) {
-                showEmptyAlert();
-            }
-            allRules = rules;
-            str = JSON.stringify(allRules)
+    PrefRuleEditor.prototype.exportRules = function (self) {
+        chrome.storage.local.get(null, function (allObj) {
+            let str = JSON.stringify(allObj)
             chrome.downloads.download({
                 url: "data:application/json," + str,
                 filename: "custom-blocker-rules.json",
                 conflictAction: "overwrite",
             }, function (id) {
-
             });
-        });
+        })
     }
 
-    PrefRuleEditor.prototype.importRules = function () {
-        var _this = this;
-        var self = this;
-
+    PrefRuleEditor.prototype.importRules = function (self) {
         rulesjson = document.getElementById('rule_editor_import_text').value;
-        let rules = []
+        let obj = []
         try {
-            rules = JSON.parse(rulesjson)
-        }catch (e){
+            obj = JSON.parse(rulesjson)
+            if (typeof obj !== "object") {
+                throw "导入配置格式不正确"
+            }
+        } catch (e) {
             alert("导入配置格式不正确")
+            return
         }
-        console.log(rules)
-
-        for (var i in rules) {
-            console.log(rules[i])
-            cbStorage.saveRule(rules[i],null)
-        }
-
+        // 清除本地已有的
+        chrome.storage.local.clear()
+        chrome.storage.local.set(obj, function () {
+            alert("导入完成，请刷新查看");
+        });
     }
 
     PrefRuleEditor.prototype.removeGroup = function (group) {

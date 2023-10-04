@@ -69,7 +69,7 @@ var CustomBlockerStorage = (function () {
     };
     CustomBlockerStorage.prototype.loadAll = function (callback) {
         var scope = this;
-        chrome.storage.sync.get(null, function (allObj) {
+        chrome.storage.local.get(null, function (allObj) {
             console.log(allObj);
             var rules = [];
             var groups = [];
@@ -175,7 +175,7 @@ var CustomBlockerStorage = (function () {
                 jsonObj["merge"] = true;
             }
             obj[scope.getRuleJSONKey(rule)] = jsonObj;
-            chrome.storage.sync.set(obj, function () {
+            chrome.storage.local.set(obj, function () {
                 console.log("Saved rule.");
                 if (callback) {
                     callback();
@@ -195,7 +195,7 @@ var CustomBlockerStorage = (function () {
             console.log(jsonObj);
             var obj = {};
             obj[scope.getWordGroupJSONKey(group)] = jsonObj;
-            chrome.storage.sync.set(obj, function () {
+            chrome.storage.local.set(obj, function () {
                 console.log("Saved rule.");
                 if (callback) {
                     callback();
@@ -205,7 +205,7 @@ var CustomBlockerStorage = (function () {
     };
     CustomBlockerStorage.prototype.deleteWordGroup = function (group, callback) {
         console.log("deleteWordGroup " + this.getWordGroupJSONKey(group));
-        chrome.storage.sync.remove(this.getWordGroupJSONKey(group), function () {
+        chrome.storage.local.remove(this.getWordGroupJSONKey(group), function () {
             if (callback) {
                 callback();
             }
@@ -219,7 +219,7 @@ var CustomBlockerStorage = (function () {
         return rule;
     };
     CustomBlockerStorage.prototype.deleteRule = function (rule, callback) {
-        chrome.storage.sync.remove(this.getRuleJSONKey(rule), function () {
+        chrome.storage.local.remove(this.getRuleJSONKey(rule), function () {
             console.log("Deleted rule.");
             if (callback) {
                 callback();
@@ -443,7 +443,7 @@ var CustomBlockerStorage = (function () {
                 merged["ui"] = deviceId;
                 var obj = {};
                 obj[key] = merged;
-                chrome.storage.sync.set(obj, function () {
+                chrome.storage.local.set(obj, function () {
                     console.log("Merged rule was saved.");
                 });
             }

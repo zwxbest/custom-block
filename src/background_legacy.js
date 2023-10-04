@@ -23,7 +23,7 @@ function syncAll(rulesToSync, callback) {
         var json = storage.convertRuleToJSON(rule);
         json["merge"] = true;
         obj[storage.getRuleJSONKey(rule)] = json;
-        chrome.storage.sync.set(obj, function () {
+        chrome.storage.local.set(obj, function () {
             scope_1.syncAll(rulesToSync, callback);
         });
     }
