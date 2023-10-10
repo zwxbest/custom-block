@@ -9,12 +9,12 @@
 //     var s = document.getElementsByTagName('script')[0];
 //     s.parentNode.insertBefore(ga, s);
 // })();
-// var Analytics = (function () {
-//     function Analytics() {
-//     }
-//     Analytics.trackEvent = function (key, value) {
-//         _gaq.push(['_trackEvent', key, value]);
-//     };
-//     return Analytics;
-// }());
+var Analytics = (function () {
+    function Analytics() {
+    }
+    Analytics.trackEvent = function (key, value) {
+        // _gaq.push(['_trackEvent', key, value]);
+    };
+    return Analytics;
+}());
 //# sourceMappingURL=analytics.js.map
