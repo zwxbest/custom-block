@@ -143,7 +143,7 @@ var RuleEditorFrame = (function () {
     RuleEditorFrame.prototype.reloadBG = function () {
         try {
             var bgWindow = chrome.extension.getBackgroundPage();
-            bgWindow.reloadLists();
+            bgWindow.reloadLists(true);
         }
         catch (ex) {
             alert(ex);

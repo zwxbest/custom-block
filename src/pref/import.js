@@ -107,7 +107,7 @@ var Import = (function () {
             document.getElementById('button_import').disabled = false;
             try {
                 var bgWindow = chrome.extension.getBackgroundPage();
-                bgWindow.reloadLists();
+                bgWindow.reloadLists(true);
             }
             catch (ex) {
                 alert(ex);

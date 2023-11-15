@@ -2,22 +2,31 @@ var initDone = false;
 var existingTabs = new Array();
 var tabBadgeMap = new Array();
 var ruleList = [];
+
 function onStartBackground() {
-    updateDbIfNeeded(createRuleTable);
+    // updateDbIfNeeded(createRuleTable);
+    reloadLists(false);
+    GiteeSync.syncRemoteConfig(null,null)
 }
+
 function removeFromExistingTabList(tabIdToRemove) {
     for (var id in existingTabs) {
         if (tabIdToRemove == id)
             existingTabs[id] = null;
     }
 }
+
 function addToExistingTabList(tabIdToAdd) {
     existingTabs[tabIdToAdd] = true;
 }
-function reloadLists() {
-    console.log("reloadLists");
+
+function reloadLists(changed) {
     loadLists();
+    if (changed) {
+        GiteeSync.uploadConfig(null, null, null)
+    }
 }
+
 function openRulePicker(selectedRule) {
     var status = (selectedRule) ? 'edit' : 'create';
     Analytics.trackEvent('openRulePicker', status);
@@ -34,13 +43,12 @@ function openRulePicker(selectedRule) {
                 appliedRuleList: appliedRules
             });
         });
-    }
-    catch (ex) {
+    } catch (ex) {
         console.log(ex);
     }
 }
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     console.log(changeInfo)
     if (changeInfo.url) {
         updateUrl(tab.id, null, tab);
@@ -63,6 +71,7 @@ var CustomBlockerTab = (function () {
             self.onMessage(msg);
         });
     }
+
     CustomBlockerTab.prototype.execCallbackDb = function (param) {
         console.log("TODO execCallbackDb");
     };
@@ -74,8 +83,7 @@ var CustomBlockerTab = (function () {
                 path: iconPath,
                 tabId: this.tabId
             });
-        }
-        catch (ex) {
+        } catch (ex) {
             console.log(ex);
         }
     };
@@ -95,16 +103,14 @@ var CustomBlockerTab = (function () {
                 tabId: this.tabId
             });
             this.appliedRules = param.rules;
-        }
-        catch (ex) {
+        } catch (ex) {
             console.log(ex);
         }
     };
     CustomBlockerTab.prototype.postMessage = function (message) {
         try {
             this.port.postMessage(message);
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
     };
@@ -158,7 +164,7 @@ var tabOnUpdate = function (tabId, changeInfo, tab) {
     }
 };
 
-function updateUrl(tabId, changeInfo, tab){
+function updateUrl(tabId, changeInfo, tab) {
     var isDisabled = ('true' == localStorage.blockDisabled);
     _setIconDisabled(isDisabled, tabId);
     if (isDisabled) {
@@ -167,7 +173,7 @@ function updateUrl(tabId, changeInfo, tab){
     var url = tab.url;
     if (isValidURL(url)) {
         tabMap[tabId] = new CustomBlockerTab(tabId, tab);
-        console.log("post message init")
+        console.log("post message reload")
         tabMap[tabId].postMessage({
             command: 'reload',
             rules: ruleList,
@@ -175,15 +181,19 @@ function updateUrl(tabId, changeInfo, tab){
         });
     }
 }
+
 var VALID_URL_REGEX = new RegExp('^https?:');
+
 function isValidURL(url) {
     return url != null && VALID_URL_REGEX.test(url);
 }
+
 function getForegroundCallback(tabId) {
     return function (param) {
     };
 }
 ;
+
 function handleForegroundMessage(tabId, param) {
     console.log("Foreground message received.");
     console.log(param);
@@ -199,18 +209,20 @@ function handleForegroundMessage(tabId, param) {
             break;
     }
 }
+
 function getAppliedRules(callback) {
     chrome.tabs.getSelected(null, function (tab) {
         try {
             var appliedRules = (tabMap[tab.id]) ? tabMap[tab.id].appliedRules : [];
             callback(appliedRules);
-        }
-        catch (ex) {
+        } catch (ex) {
             console.log(ex);
         }
     });
 }
+
 var smartRuleEditorSrc = '';
+
 function loadSmartRuleEditorSrc() {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
@@ -223,6 +235,7 @@ function loadSmartRuleEditorSrc() {
     xhr.open("GET", chrome.extension.getURL('/smart_rule_editor_' + chrome.i18n.getMessage("extLocale") + '.html'), true);
     xhr.send();
 }
+
 {
     chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
         removeFromExistingTabList(tabId);
@@ -233,7 +246,7 @@ function loadSmartRuleEditorSrc() {
         for (var _index in existingTabs) {
             var tabIdToDisable = parseInt(_index);
             if (tabIdToDisable && tabIdToDisable != tabId) {
-                CustomBlockerTab.postMessage(tabIdToDisable, { command: 'stop' });
+                CustomBlockerTab.postMessage(tabIdToDisable, {command: 'stop'});
             }
         }
         try {
@@ -248,7 +261,7 @@ function loadSmartRuleEditorSrc() {
                     tabId: tabId
                 });
             }
-            CustomBlockerTab.postMessage(tabId, { command: 'resume' });
+            CustomBlockerTab.postMessage(tabId, {command: 'resume'});
             if (tabBadgeMap[tabId]) {
                 if (localStorage.badgeDisabled != "true") {
                     chrome.browserAction.setBadgeText({
@@ -257,17 +270,18 @@ function loadSmartRuleEditorSrc() {
                     });
                 }
             }
-        }
-        catch (ex) {
+        } catch (ex) {
             console.log(ex);
         }
     });
 }
+
 function setIconDisabled(isDisabled) {
     chrome.tabs.getSelected(null, function (tab) {
         _setIconDisabled(isDisabled, tab.id);
     });
 }
+
 function _setIconDisabled(isDisabled, tabId) {
     if (localStorage.badgeDisabled != "true") {
         chrome.browserAction.setBadgeText({
@@ -281,6 +295,7 @@ function _setIconDisabled(isDisabled, tabId) {
         tabId: tabId
     });
 }
+
 function highlightRuleElements(rule) {
     chrome.tabs.getSelected(null, function (tab) {
         CustomBlockerTab.postMessage(tab.id, {
@@ -289,22 +304,26 @@ function highlightRuleElements(rule) {
         });
     });
 }
+
 function getBadgeTooltipString(count) {
     if (count > 1)
         return chrome.i18n.getMessage("tooltipCount").replace("__count__", count);
     else
         return chrome.i18n.getMessage("tooltipCountSingle");
 }
+
 function menuCreateOnRightClick(clicked, tab) {
     sendQuickRuleCreationRequest(clicked, tab, true);
     Analytics.trackEvent('contextMenu', 'create');
 }
 ;
+
 function menuAddOnRightClick(clicked, tab) {
     sendQuickRuleCreationRequest(clicked, tab, false);
     Analytics.trackEvent('contextMenu', 'add');
 }
 ;
+
 function sendQuickRuleCreationRequest(clicked, tab, needSuggestion) {
     var appliedRules = (tabMap[tab.id]) ? tabMap[tab.id].appliedRules : [];
     CustomBlockerTab.postMessage(tab.id, {
@@ -316,18 +335,21 @@ function sendQuickRuleCreationRequest(clicked, tab, needSuggestion) {
     });
 }
 ;
-var menuIdCreate = chrome.contextMenus.create({ "title": chrome.i18n.getMessage('menuCreateRule'), "contexts": ["selection"],
-    "onclick": menuCreateOnRightClick });
-var menuIdAdd = chrome.contextMenus.create({ "title": chrome.i18n.getMessage('menuAddToExistingRule'), "contexts": ["selection"],
-    "onclick": menuAddOnRightClick });
+var menuIdCreate = chrome.contextMenus.create({
+    "title": chrome.i18n.getMessage('menuCreateRule'), "contexts": ["selection"],
+    "onclick": menuCreateOnRightClick
+});
+var menuIdAdd = chrome.contextMenus.create({
+    "title": chrome.i18n.getMessage('menuAddToExistingRule'), "contexts": ["selection"],
+    "onclick": menuAddOnRightClick
+});
 chrome.runtime.onInstalled.addListener(function (details) {
     console.log("reason=" + details.reason);
     console.log("previousVersion=" + details.previousVersion);
     if ("install" == details.reason) {
         console.log("New install.");
         window.open(chrome.extension.getURL('/welcome_install_' + chrome.i18n.getMessage("extLocale") + '.html?install'));
-    }
-    else if (details.reason == "update" && details.previousVersion && details.previousVersion.match(/^2\./)) {
+    } else if (details.reason == "update" && details.previousVersion && details.previousVersion.match(/^2\./)) {
         window.open(chrome.extension.getURL('/welcome_' + chrome.i18n.getMessage("extLocale") + '.html'));
     }
 });
@@ -337,7 +359,7 @@ window.onload = function () {
 chrome.storage.onChanged.addListener(function (changes, namespace) {
     cbStorage.sync(changes, namespace, function () {
         cbStorage.loadAll(function (rules, groups) {
-            CustomBlockerTab.postMessageToAllTabs({ command: 'reload', rules: rules });
+            CustomBlockerTab.postMessageToAllTabs({command: 'reload', rules: rules});
         });
     });
 });

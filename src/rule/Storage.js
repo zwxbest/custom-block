@@ -128,7 +128,7 @@ var CustomBlockerStorage = (function () {
             console.log("disableRule ids=");
             console.log(scope.disabledRuleIDList);
             chrome.storage.local.set({ disabledRules: scope.disabledRuleIDList }, function () {
-                chrome.extension.getBackgroundPage().reloadLists();
+                chrome.extension.getBackgroundPage().reloadLists(false);
                 callback();
             });
         }, true);
@@ -146,7 +146,7 @@ var CustomBlockerStorage = (function () {
             console.log("enableRule ids=");
             console.log(scope.disabledRuleIDList);
             chrome.storage.local.set({ disabledRules: scope.disabledRuleIDList }, function () {
-                chrome.extension.getBackgroundPage().reloadLists();
+                chrome.extension.getBackgroundPage().reloadLists(false);
                 callback();
             });
         }, true);

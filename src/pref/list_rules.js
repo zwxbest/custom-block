@@ -267,7 +267,7 @@ var RuleContainer = (function () {
                 _this.liElement.parentNode.removeChild(_this.liElement);
                 removeElement(_this);
                 showCount();
-                reloadBackground();
+                reloadBackground(true);
             }
         };
     };
@@ -286,7 +286,7 @@ function refreshPathSections() {
 var reloadBackground = function () {
     try {
         var bgWindow = chrome.extension.getBackgroundPage();
-        bgWindow.reloadLists();
+        bgWindow.reloadLists(true);
     } catch (ex) {
         alert(ex);
     }

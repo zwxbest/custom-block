@@ -88,7 +88,7 @@ var WordGroupPage = (function () {
             cbStorage.deleteWordGroup(group, function () {
                 try {
                     var bgWindow = chrome.extension.getBackgroundPage();
-                    bgWindow.reloadLists();
+                    bgWindow.reloadLists(true);
                 }
                 catch (ex) {
                     alert(ex);
@@ -124,7 +124,7 @@ var WordGroupEditor = (function () {
                     try {
                         var bgWindow = chrome.extension.getBackgroundPage();
                         self.showMessage(chrome.i18n.getMessage('wordGroupSaveDone'));
-                        bgWindow.reloadLists();
+                        bgWindow.reloadLists(true);
                     }
                     catch (ex) {
                         alert(ex);

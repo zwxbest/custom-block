@@ -3,7 +3,7 @@
 
   "manifest_version": 2,
   "name" : "CustomBlocker",
-  "version" : "4.1.9",
+  "version" : "4.2.0",
   "default_locale": "en",
   "description" : "__MSG_extDescription__",
   "browser_action": {
@@ -62,7 +62,8 @@
         "src/rule_editor.js",
         "src/smart_rule_editor.js",
         "src/path_analyzer.js",
-        "src/xpath_builder.js", "src/css_builder.js"
+        "src/xpath_builder.js", "src/css_builder.js",
+        "src/base64.js","src/gitee_sync.js"
         ],
       "run_at" : "document_idle",
       "all_frames" : false

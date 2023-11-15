@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>同步到Gitee</title>
+    <link rel="stylesheet" type="text/css" href="../css/pref/list_rules.css">
+    <link rel="stylesheet" type="text/css" href="../css/pref/help.css">
+    <link rel="stylesheet" type="text/css" href="../css/rule_editor.css">
+    <link rel="stylesheet" type="text/css" href="../css/rule_editor_common.css">
+    <link rel="stylesheet" type="text/css" href="../css/keywords.css">
+    <!-- CSS -->
+
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet"  crossorigin="anonymous">
+
+    <script type="text/javascript" src="../src/CustomBlocker.js"></script>
+    <script type="text/javascript" src="../src/pref/list_rules.js"></script>
+    <script type="text/javascript" src="../src/pref/list_rules.js"></script>
+    <script type="text/javascript" src="../src/base64.js"></script>
+    <script type="text/javascript" src="../src/pref/sync.js"></script>
+
+</head>
+<body>
+<header class="header">
+    <h1 class="header__title"><img src="../img/top_title.png" alt="CustomBlocker for Google Chrome"></h1>
+    <div class="header__donate"><a class="custom_filter_localize_donate" id="donate_link" href="#donate">Donate</a></div>
+    <nav class="header__tabs">
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" href="index.html?p=p4"><span class="custom_filter_localize_prefTitle">Manage Rules</span></a></div>
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="word_group_link" href="word_group.html"><span class="custom_filter_localize_word_group">Word Groups</span></a></div>
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="help_link" href="help_en.html"><span class="custom_filter_localize_help">Help</span></a></div>
+        <div class="header__tabs__tab header__tabs__tab--selected"><a class="header__tabs__tab__link" id="sync_link" href="sync.html"><span class="custom_filter_localize_sync">同步到Gitee</span></a></div>
+    </nav>
+</header>
+<div id="wrapper" style="margin-left: 50px; margin-top: 30px;">
+    <form>
+        <div class="form-group row">
+            <label for="input-token" class="col-sm-2 col-form-label">令牌</label>
+            <input type="text" class=" col-sm-5 form-control" id="input-token" required>
+        </div>
+        <div class="form-group row">
+            <label for="input-user" class="col-sm-2 col-form-label ">用户名</label>
+            <input type="text" class="col-sm-5 form-control" id="input-user" required>
+        </div>
+        <div class="form-group row">
+            <label for="input-repo" class="col-sm-2 col-form-label ">仓库名</label>
+            <input type="text" class="col-sm-5 form-control" id="input-repo" required>
+        </div>
+        <div class="form-group row">
+            <label for="input-config" class="col-sm-2 col-form-label">配置文件名</label>
+            <input type="text" class="col-sm-5 form-control" id="input-config" required>
+        </div>
+        <button type="button" class="btn btn-primary " id="btn-sync">保存</button>
+    </form>
+    <div style="margin-top: 20px">
+        <button type="button" class="btn btn-success " id="btn-upload">上传本地配置到Gitee</button>
+        <button type="button" class="btn btn-warning " id="btn-download">下载Gitee配置并覆盖</button>
+    </div>
+    <h2>Gitee是什么</h2>
+    <p>
+        Gitee是一个代码管理工具，也就说存储访问代码文件的地方。<br>
+        我们可以将插件的配置信息存储到Gitee中，以及读取。<br>
+        这样便可以实现一端修改，多端更新<br>
+        地址：<a href = "https://gitee.com">https://gitee.com</a><br>
+    </p>
+
+    <h2>如何配置Gitee同步</h2>
+    <p>
+        我们通过API接口将配置信息同步到Gitee中<br>
+        首先，新建一个仓库，随意命名，比如chrome_plugins,仓库设置为私有<br>
+        然后，在此仓库内新建一个文件，随意命名，比如命名为customblocker.json<br>
+        最后，新建令牌，【设置】 - 【私人令牌】 - 【生成新令牌】<br>
+        用户名是gitee仓库的拥有者<br>
+        比如https://gitee.com/ApolloAuto/apollo这个仓库，用户名ApolloAuto,仓库名是apollo<br>
+        将令牌、用户名、仓库名、文件名、填到本页面相应输入框中，保存。<br>
+        如果提示绑定失败，请仔细检查绑定内容拼写是否正确，是否已经创建好配置文件<br>
+    </p>
+
+    <h2>插件与Gitee的同步机制</h2>
+    <p>
+        首先成功绑定token、用户名、仓库、配置文件名信息，<br>
+        绑定成功后不会立刻同步数据，防止出现旧配置覆盖新配置的问题。<br>
+        手动点击上传配置，可以将本地配置上传到Gitee。<br>
+        点击下载配置，可以将Gitee配置下载覆盖到本地。<br>
+        每次新打开浏览器，会自动触发一次下载同步配置的操作。<br>
+        每次变更配置，比如增加屏蔽项，屏蔽词，会自动将本地配置上传到Gitee。<br>
+    </p>
+
+    <h2>多端的同步覆盖问题</h2>
+    <p>
+        后上传的的会覆盖先上传的。<br>
+        比如手机和电脑都绑定了相同的配置参数，<br>
+        手机在15:00屏蔽词增加了科比，电脑在15:10增加了屏蔽词詹姆斯,<br>
+        实际在Gitee上新增的屏蔽词只有詹姆斯。<br>
+        <span style="color: red">注意，如果不小心在Gitee上覆盖了配置并且想要恢复，可以通过Gitee的历史操作，<br>
+        找到正确的一次操作，复制旧版本内容，然后编辑当前的配置文件，粘贴覆盖即可</span>
+
+    </p>
+
+</div>
+<script type="text/javascript" src="../src/analytics.js"></script>
+</body>
+</html>
