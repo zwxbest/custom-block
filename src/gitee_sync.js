@@ -27,15 +27,19 @@ var GiteeSync = (function () {
                     let obj = []
                     obj = JSON.parse(Base64.decode(content))
                     if (typeof obj === "object") {
-                        // 清除本地已有的
-                        chrome.storage.local.clear()
-                        obj.gitee = giteeobj;//把配置信息还原
-                        chrome.storage.local.set(obj, function () {
-                            if(success){
-                                success();
-                            }
-                            console.log("sync from remote successfully")
-                        });
+                        chrome.storage.local.get(null, function (allObj) {
+                            //disabledRules用本地的覆盖
+                            obj.disabledRules = allObj.disabledRules;
+                            // 清除本地已有的
+                            chrome.storage.local.clear()
+                            obj.gitee = giteeobj;//把配置信息还原
+                            chrome.storage.local.set(obj, function () {
+                                if (success) {
+                                    success();
+                                }
+                                console.log("sync from remote successfully")
+                            });
+                        })
                     }
                 }
             ).catch(err => {

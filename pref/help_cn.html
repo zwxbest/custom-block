@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Help | CustomBlocker</title>
+    <link rel="stylesheet" type="text/css" href="../css/pref/list_rules.css">
+    <link rel="stylesheet" type="text/css" href="../css/pref/help.css">
+    <link rel="stylesheet" type="text/css" href="../css/rule_editor.css">
+    <link rel="stylesheet" type="text/css" href="../css/rule_editor_common.css">
+    <link rel="stylesheet" type="text/css" href="../css/keywords.css">
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet"
+          crossorigin="anonymous">
+    <script type="text/javascript" src="../src/CustomBlocker.js"></script>
+    <script type="text/javascript" src="../src/pref/list_rules.js"></script>
+    <script type="text/javascript" src="../src/pref/list_rules.js"></script>
+    <script type="text/javascript" src="../src/pref/help.js"></script>
+</head>
+<body>
+<header class="header">
+    <h1 class="header__title"><img src="../img/top_title.png" alt="CustomBlocker for Google Chrome"></h1>
+    <div class="header__donate"><a class="custom_filter_localize_donate" id="donate_link" href="#donate">Donate</a>
+    </div>
+    <nav class="header__tabs">
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" href="index.html?p=p4"><span
+                class="custom_filter_localize_prefTitle">Manage Rules</span></a></div>
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="word_group_link"
+                                          href="word_group.html"><span class="custom_filter_localize_word_group">Word Groups</span></a>
+        </div>
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="install_link"
+                                          href="welcome_install_cn.html"><span class="custom_filter_localize_install">屏蔽常用网站</span></a>
+        </div>
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="sync_link" href="sync.html"><span
+                class="custom_filter_localize_sync">同步到Gitee</span></a></div>
+        <div class="header__tabs__tab header__tabs__tab--selected"><a class="header__tabs__tab__link" id="help_link"
+                                                                      href="help_en.html"><span
+                class="custom_filter_localize_help">Help</span></a></div>
+
+
+    </nav>
+</header>
+<div id="wrapper" style="margin-left: 20px;">
+    <h2>CustomBlocker的作用以及使用场景</h2>
+    <p>
+        CustomBlocker是一个全网通用的可自定义屏蔽词的Chrome插件。<br>
+        可以根据关键词屏蔽论坛帖子，屏蔽新闻，屏蔽某个用户发的帖子，屏蔽评论区等等。<br>
+        比如知乎、微博、贴吧、虎扑、豆瓣、虎牙、斗鱼、NGA等等，都可以通过这个插件实现屏蔽过滤。<br>
+    </p>
+    <h2>怎么创建屏蔽规则?</h2>
+
+    <p>
+        <span style="color:red">首先，需要有基础的CSS选择器知识，只需要了解CSS选择器的用法即可，请自行查找资料学习。</span>
+    </p>
+
+    <p><img src="../img/help/help_example.png"></p>
+
+    <p>上图是一个例子<br>
+        ①，要匹配的网址，如果不设置正则，只需要匹配包含网站就算匹配成功。<br>
+        比如网址设置为https://nga.178.com,那么https://nga.178.com/thread.php和https://nga.178.com/read.php都会匹配成功。<br>
+        如果设置了正则，比如https://bbs.hupu.com/*.html，那么就不会匹配https://bbs.hupu.com/topic<br>
+    <hr>
+    ②需要隐藏的元素，这个需要设置为【⑤需要搜索的元素】的父元素或者相同（什么是父元素请自行学习CSS选择器）。
+    比如图中一个.topicrow代表论坛一条帖子，里面有标题也有用户名，我们想要屏蔽包含特定关键词的帖子，或者屏蔽特定用户的帖子。<br>那么需要在.topicrow元素中搜索特定关键词或者用户名,
+    找到之后，屏蔽隐藏掉.topicrow代表的帖子。<br>
+    <br>
+    父元素的场景:虎牙直播，.game-live-item包含了封面图和用户名等等信息，我们只想屏蔽特定主播的信息。<br>
+    .game-live-item .txt .nick只包含主播的名字，我们将搜索元素设置为.game-live-item .txt
+    .nick,将隐藏元素设置为父元素.game-live-item，
+    这样当匹配到特定用户名的主播，会将包含封面等信息的整个主播框全部屏蔽隐藏掉<br>
+    <hr>
+    ③关键词。这个好理解，只要【⑤需要搜索的元素】的包含任意一个关键词，规则生效。<br>
+    <hr>
+    ④关键词分组。可以将一组关键词放到一个组里，配置上此分组，分组内的所有关键词都会加到屏蔽词中。<br>
+    这样的好处是，可以将一个关键词组配置到多个不同的网站上，只需要修改关键词组，所有网站都会生效。<br>
+    比如足球论有虎扑，NGA，直播吧，我想增加一个屏蔽词-内马尔，如果没配置分组，我需要每个网站的规则都手动加上内马尔这个词<br>
+    但假如我配置了足球分组，那么只需要在足球分组里加一个内马尔，这3个网站全部生效。<br>
+    这个关键词分组和【④关键词】是一起生效的，可以同时配置。
+    <hr>
+    ⑤ 要搜索的元素。这个在上面已经提到了，需要和【⑤需要搜索的元素】相同或者为其子元素。
+
+    <h2>发布地址</h2>
+    因为chrome商店需要更细到V3版本才允许上架，暂时没时间更新。<br>
+    先发布到Github上，下载后用开发者模式安装<br>
+    <a href="https://github.com/zwxbest/custom-block/releases">https://github.com/zwxbest/custom-block/releases</a><br>
+    手机可以使用Kiwi浏览器，通过压缩包安装插件。
+    <h2><a name="donate">支持打赏</a></h2>
+
+    <p><img src="../img/help/money.png"></p>
+
+    一毛钱也是爱，您的支持是我更新的动力。
+
+    <h2>求助咨询</h2>
+    <p>
+        QQ:201194948 , 一包辣条或者一杯咖啡，帮助学习CSS基础，以及指导配置需要屏蔽的网站。
+        软件BUG问题免费。
+    </p>
+
+</div>
+<script type="text/javascript" src="../src/analytics.js"></script>
+</body>
+</html>

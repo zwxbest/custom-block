@@ -175,6 +175,7 @@ var CustomBlockerUtil = (function () {
                     element.innerHTML = chrome.i18n.getMessage(key);
                 }
                 else {
+                    console.log("Missing localization key: " + key + ", className=" + element.className)
                     Log.e("Missing localization key: " + key + ", className=" + element.className);
                 }
             }

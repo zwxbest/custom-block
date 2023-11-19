@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Welcome | CustomBlocker</title>
+    <link rel="stylesheet" type="text/css" href="../css/rule_editor.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/pref/list_rules.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/pref/help.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/welcome_install.css"/>
+    <script type="text/javascript" src="../src/welcome/welcome.js"></script>
+    <script type="text/javascript" src="../src/pref/preset_cn.js"></script>
+    <script type="text/javascript" src="../src/CustomBlocker.js"></script>
+</head>
+<body>
+<header class="header">
+    <h1 class="header__title"><img src="../img/top_title.png" alt="CustomBlocker for Google Chrome"></h1>
+    <div class="header__donate"><a class="custom_filter_localize_donate" id="donate_link" href="#donate">Donate</a>
+    </div>
+    <nav class="header__tabs">
+        <div class="header__tabs__tab "><a class="header__tabs__tab__link" href="index.html?p=p4"><span class="custom_filter_localize_prefTitle">Manage Rules</span></a></div>
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="word_group_link" href="word_group.html"><span class="custom_filter_localize_word_group">Word Groups</span></a></div>
+        <div class="header__tabs__tab header__tabs__tab--selected"><a class="header__tabs__tab__link" id="install_link" href="welcome_install_cn.html"><span class="custom_filter_localize_install">屏蔽常用网站</span></a></div>
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="sync_link" href="sync.html"><span class="custom_filter_localize_sync">同步到Gitee</span></a></div>
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="help_link" href="help_en.html"><span class="custom_filter_localize_help">Help</span></a></div>
+    </nav>
+</header>
+<div id="wrapper" style="margin-left: 50px; margin-top: 30px;">
+    <h2>Welcome to CustomBlocker!</h2>
+    <p>
+        感谢安装CustomBlocker!<br/>
+        下面是国内常用网站的预设屏蔽配置，选择安装后,<br>
+        打开相应网站,添加屏蔽词即可。
+    </p>
+    <div class="presetSection">
+        <input type="checkbox" id="checkAll"/><label for="checkAll">All</label>
+        <ul id="sites" class="sites">
+        </ul>
+        <div>
+            <input type="button" value="安装选中的规则" id="buttonUse" class="buttonUse"/>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="../src/analytics.js"></script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 
   "manifest_version": 2,
   "name" : "CustomBlocker",
-  "version" : "4.2.0",
+  "version" : "5.0.0",
   "default_locale": "en",
   "description" : "__MSG_extDescription__",
   "browser_action": {
@@ -43,7 +43,8 @@
     "rule_editor_frame_ja.html",
     "rule_editor_frame_en.html",
     "en/rule_editor_frame.html",
-    "ja/rule_editor_frame.html"
+    "ja/rule_editor_frame.html",
+    "cn/rule_editor_frame.html"
   ],
   "content_scripts" : [
     {
