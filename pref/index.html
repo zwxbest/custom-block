@@ -21,8 +21,9 @@
       <nav class="header__tabs">
         <div class="header__tabs__tab header__tabs__tab--selected"><a class="header__tabs__tab__link" href="index.html?p=p4"><span class="custom_filter_localize_prefTitle">Manage Rules</span></a></div>
         <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="word_group_link" href="word_group.html"><span class="custom_filter_localize_word_group">Word Groups</span></a></div>
-        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="help_link" href="help_en.html"><span class="custom_filter_localize_help">Help</span></a></div>
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="install_link" href="welcome_install_cn.html"><span class="custom_filter_localize_install">屏蔽常用网站</span></a></div>
         <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="sync_link" href="sync.html"><span class="custom_filter_localize_sync">同步到Gitee</span></a></div>
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="help_link" href="help_en.html"><span class="custom_filter_localize_help">Help</span></a></div>
       </nav>
     </header>
     <div id="prefMain">
@@ -54,7 +55,7 @@
               </div>
               <div>
                 <input id="specify_url_by_regexp_checkbox" type="checkbox">
-                <label for="specify_url_by_regexp_checkbox">Use RegExp</label>
+                <label for="specify_url_by_regexp_checkbox">使用正则表达式</label>
               </div>
               <div class="input_section">
                 <div class="label"><span class="custom_filter_localize_exampleUrl">Example URL</span></div>
@@ -117,7 +118,7 @@
                   <input id="rule_editor_radio_search_css" type="radio" name="rule_editor_radio_search">
                   <label for="rule_editor_radio_search_css">CSS</label>
                 </div>
-                <div class="description"><span class="custom_filter_localize_descriptionSearch">The filter works when these elements contain "Words".</span></div>
+                <div class="description"><span class="custom_filter_localize_descriptionSearch">如果要搜索元素的内容包含关键词，规则生效.</span></div>
                 <h3><span class="custom_filter_localize_sectionWord">Words</span></h3>
                 <div>
                   <input id="rule_editor_keyword" type="text">
@@ -134,8 +135,8 @@
                   <input id="rule_editor_keyword_case_sensitive_checkbox" type="checkbox">
                   <label for="rule_editor_keyword_case_sensitive_checkbox"><span class="custom_filter_localize_case_sensitive">Case Sensitive</span></label>
                   <!--  Include link URL-->
-                  <input id="rule_editor_keyword_include_href_checkbox" type="checkbox">
-                  <label for="rule_editor_keyword_include_href_checkbox"><span class="custom_filter_localize_include_href">Include URL</span></label>
+                  <input id="rule_editor_keyword_include_href_checkbox" type="checkbox" style="display: none;">
+<!--                  <label for="rule_editor_keyword_include_href_checkbox"><span class="custom_filter_localize_include_href">Include URL</span></label>-->
                 </div>
                 <div class="smart_rule_editor_keywords" id="rule_editor_keywords"></div>
                 <h3>Word Groups</h3>
@@ -165,9 +166,6 @@
             <div><a id="help_link_empty" href="help.html"><span class="custom_filter_localize_helpEmpty">How to make rules</span></a></div>
           </div>
           <div class="rule-count"><span id="activeRuleCount">-</span> /<span id="totalRuleCount">-</span><span class="custom_filter_localize_ruleSuffix">Rules</span></div>
-          <!--  Dev-->
-          <div><span class="custom_filter_localize_installPreset">Install Preset Rules</span></div>
-
           <div style="margin-top: 10px">
             <input class="uiButton" id="rule_editor_export_button" type="button" value="Export">
 

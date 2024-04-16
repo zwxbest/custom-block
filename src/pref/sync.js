@@ -1,6 +1,6 @@
 window.onload = function () {
     CustomBlockerUtil.processPage();
-
+    document.getElementById('help_link').setAttribute("href", 'help_' + chrome.i18n.getMessage('extLocale') + '.html');
     chrome.storage.local.get(null, function (allObj) {
 
         let gitobj = allObj["gitee"]
@@ -15,7 +15,15 @@ window.onload = function () {
     })
 
     document.getElementById("btn-download").addEventListener("click", function () {
-        GiteeSync.syncRemoteConfig( () => alert("下载成功"), (err) => alert("下载失败," + err));
+        GiteeSync.syncRemoteConfig(() => {
+            try {
+                var bgWindow = chrome.extension.getBackgroundPage();
+                bgWindow.reloadLists(true);
+            } catch (ex) {
+                alert(ex);
+            }
+            alert("下载成功");
+        }, (err) => alert("下载失败," + err));
     })
 
 

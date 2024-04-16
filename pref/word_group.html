@@ -20,8 +20,9 @@
       <nav class="header__tabs">
         <div class="header__tabs__tab"><a class="header__tabs__tab__link" href="index.html?p=p4"><span class="custom_filter_localize_prefTitle">Manage Rules</span></a></div>
         <div class="header__tabs__tab header__tabs__tab--selected"><a class="header__tabs__tab__link" id="word_group_link" href="word_group.html"><span class="custom_filter_localize_word_group">Word Groups</span></a></div>
-        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="help_link" href="help_en.html"><span class="custom_filter_localize_help">Help</span></a></div>
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="install_link" href="welcome_install_cn.html"><span class="custom_filter_localize_install">屏蔽常用网站</span></a></div>
         <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="sync_link" href="sync.html"><span class="custom_filter_localize_sync">同步到Gitee</span></a></div>
+        <div class="header__tabs__tab"><a class="header__tabs__tab__link" id="help_link" href="help_en.html"><span class="custom_filter_localize_help">Help</span></a></div>
       </nav>
     </header>
     <div class="note note--dismissable" note_key="KeywordGroupHeadline"><span class="custom_filter_localize_helpKeywordGroupDetail">"Keyword groups" feature is supported in version 4.x!</span><a class="note__dismiss" id="js_note_close" href="#">x</a></div>
@@ -51,8 +52,8 @@
                 <input id="rule_editor_keyword_case_sensitive_checkbox" type="checkbox">
                 <label for="rule_editor_keyword_case_sensitive_checkbox"><span class="custom_filter_localize_case_sensitive">Case Sensitive</span></label>
                 <!--  Include link URL-->
-                <input id="rule_editor_keyword_include_href_checkbox" type="checkbox">
-                <label for="rule_editor_keyword_include_href_checkbox"><span class="custom_filter_localize_include_href">Include URL</span></label>
+                <input id="rule_editor_keyword_include_href_checkbox" type="checkbox" style="display: none;">
+<!--                <label for="rule_editor_keyword_include_href_checkbox"><span class="custom_filter_localize_include_href">Include URL</span></label>-->
               </div>
               <div class="smart_rule_editor_keywords" id="rule_editor_keywords"></div>
             </div>
@@ -69,6 +70,11 @@
           <div><a class="uiButton uiButtonAdd custom_filter_localize_newGroup" id="js_word_group_create_button" href="javascript:void(0)">New group</a></div>
           <ul class="rule-list" id="js_rule-list"></ul>
         </div>
+      </div>
+      <div style="margin-top: 10px">
+        <span>
+
+        </span>
       </div>
     </div>
     <script type="text/javascript" src="../src/analytics.js"></script>

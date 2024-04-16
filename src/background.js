@@ -115,8 +115,6 @@ var CustomBlockerTab = (function () {
         }
     };
     CustomBlockerTab.prototype.onMessage = function (message) {
-        console.log("onMessage");
-        console.log(message);
         switch (message.command) {
             case 'badge':
                 this.execCallbackBadge(message.param);
@@ -155,7 +153,6 @@ var tabOnUpdate = function (tabId, changeInfo, tab) {
     var url = tab.url;
     if (isValidURL(url)) {
         tabMap[tabId] = new CustomBlockerTab(tabId, tab);
-        console.log("post message init")
         tabMap[tabId].postMessage({
             command: 'init',
             rules: ruleList,
@@ -173,7 +170,6 @@ function updateUrl(tabId, changeInfo, tab) {
     var url = tab.url;
     if (isValidURL(url)) {
         tabMap[tabId] = new CustomBlockerTab(tabId, tab);
-        console.log("post message reload")
         tabMap[tabId].postMessage({
             command: 'reload',
             rules: ruleList,
@@ -348,7 +344,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
     console.log("previousVersion=" + details.previousVersion);
     if ("install" == details.reason) {
         console.log("New install.");
-        window.open(chrome.extension.getURL('/welcome_install_' + chrome.i18n.getMessage("extLocale") + '.html?install'));
+        window.open(chrome.extension.getURL('/pref/welcome_install_' + chrome.i18n.getMessage("extLocale") + '.html?install'));
     } else if (details.reason == "update" && details.previousVersion && details.previousVersion.match(/^2\./)) {
         window.open(chrome.extension.getURL('/welcome_' + chrome.i18n.getMessage("extLocale") + '.html'));
     }

@@ -83,7 +83,7 @@ function applyFilter(filterString) {
 function showCount() {
     var visibleCount = 0;
     for (var i = 0, l = ruleContainerList.length; i < l; i++) {
-        if (!ruleContainerList[i].filtered)
+        if (!ruleContainerList[i].rule.is_disabled)
             visibleCount++;
     }
     document.getElementById('activeRuleCount').innerHTML = String(visibleCount);

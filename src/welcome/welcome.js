@@ -1,9 +1,12 @@
 var Welcome = (function () {
     function Welcome() {
     }
+
     Welcome.init = function () {
         Welcome.siteWrappers = [];
+        CustomBlockerUtil.processPage();
         Welcome.renderPreset();
+        document.getElementById('help_link').setAttribute("href", 'help_' + chrome.i18n.getMessage('extLocale') + '.html');
         document.getElementById("buttonUse").addEventListener('click', Welcome.useChecked, false);
         document.getElementById("checkAll").checked = true;
         document.getElementById("checkAll").addEventListener('change', Welcome.toggleAll, false);
@@ -21,19 +24,18 @@ var Welcome = (function () {
                 var presetRule = site.ruleWrappers[ruleIndex];
                 if (presetRule.rule.site_regexp == existingRule.site_regexp
                     &&
-                        presetRule.rule.search_block_css == existingRule.search_block_css
+                    presetRule.rule.search_block_css == existingRule.search_block_css
                     &&
-                        presetRule.rule.hide_block_css == existingRule.hide_block_css
+                    presetRule.rule.hide_block_css == existingRule.hide_block_css
                     &&
-                        presetRule.rule.specify_url_by_regexp == existingRule.specify_url_by_regexp
+                    presetRule.rule.specify_url_by_regexp == existingRule.specify_url_by_regexp
                     &&
-                        !presetRule.duplicate) {
+                    !presetRule.duplicate) {
                     presetRule.disable();
                 }
                 if (presetRule.duplicate) {
                     console.log("disable");
-                }
-                else {
+                } else {
                     isNew = true;
                 }
             }
@@ -70,16 +72,23 @@ var Welcome = (function () {
                 }
             }
         }
+        let count = 0;
         for (var i = 0; i < rulesToUse.length; i++) {
-            cbStorage.saveRule(rulesToUse[i].rule, null);
+            cbStorage.saveRule(rulesToUse[i].rule, () => {
+                count = count + 1;
+                if (count === rulesToUse.length) {
+                    alert("安装成功")
+                    //全部安装完成再刷新
+                    try {
+                        var bgWindow = chrome.extension.getBackgroundPage();
+                        bgWindow.reloadLists(true);
+                    } catch (ex) {
+                        alert(ex);
+                    }
+                }
+            });
         }
-        try {
-            var bgWindow = chrome.extension.getBackgroundPage();
-            bgWindow.reloadLists(true);
-        }
-        catch (ex) {
-            alert(ex);
-        }
+
         Analytics.trackEvent('contextMenu', 'count' + rulesToUse.length);
     };
     Welcome.getAlreadyInstalledLabel = function () {
@@ -105,6 +114,7 @@ var SiteWrapper = (function () {
             this.ruleWrappers.push(new RuleWrapper(site, site.rules[i]));
         }
     }
+
     SiteWrapper.prototype.getElement = function () {
         if (this.li)
             return this.li;
@@ -189,6 +199,7 @@ var RuleWrapper = (function () {
         rule.delete_date = 0;
         this.rule = rule;
     }
+
     RuleWrapper.prototype.getElement = function () {
         if (this.li)
             return this.li;

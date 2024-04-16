@@ -10,6 +10,7 @@ var REGEX_FAIL = new RegExp('.*[\\[\\]\\(\\)\"\'].*');
 var CustomBlockerUtil = (function () {
     function CustomBlockerUtil() {
     }
+
     CustomBlockerUtil.initialize = function () {
         CustomBlockerUtil.regExpAmp = new RegExp('&', 'g');
         CustomBlockerUtil.regExpLt = new RegExp('<', 'g');
@@ -33,8 +34,7 @@ var CustomBlockerUtil = (function () {
             while (node = result.iterateNext()) {
                 list.push(node);
             }
-        }
-        catch (ex) {
+        } catch (ex) {
             console.log(ex);
         }
         return list;
@@ -43,8 +43,7 @@ var CustomBlockerUtil = (function () {
         try {
             var list = document.querySelectorAll(selector);
             return (list) ? list : new Array();
-        }
-        catch (ex) {
+        } catch (ex) {
             return new Array();
         }
     };
@@ -92,8 +91,7 @@ var CustomBlockerUtil = (function () {
             while (node = result.iterateNext()) {
                 list.push(node);
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
         return list;
@@ -109,17 +107,28 @@ var CustomBlockerUtil = (function () {
             if (map && map[word.word_id] > 0) {
                 return word.word + ("(" + map[word.word_id] + ")");
             }
-            return word.word;
+            // return word.word;
+            return "";
         };
         for (var _i = 0, _a = rule.words; _i < _a.length; _i++) {
             var word = _a[_i];
-            wordStrings.push(getWordTip(word, rule.appliedWordsMap));
+            var wordtip = getWordTip(word, rule.appliedWordsMap);
+            if (wordtip !== "") {
+                wordStrings.push(wordtip);
+            }
         }
         lines.push(wordStrings.join(', '));
         for (var _b = 0, _c = rule.wordGroups; _b < _c.length; _b++) {
             var group = _c[_b];
+            var groupwordStrings = [];
+            for (const word of group.words) {
+                var groupwordtip = getWordTip(word, rule.appliedWordsMap);
+                if (groupwordtip !== "") {
+                    groupwordStrings.push(groupwordtip);
+                }
+            }
             var str = "[" + group.name + "]"
-                + group.words.map(function (word) { return getWordTip(word, rule.appliedWordsMap); }).join(",");
+                + groupwordStrings.join(",");
             lines.push(str);
         }
         return lines.join(" / ");
@@ -173,8 +182,8 @@ var CustomBlockerUtil = (function () {
                 if (!!chrome.i18n.getMessage(key)) {
                     Log.v("CustomBlockerUtil.processPage " + element.innerHTML + "->" + chrome.i18n.getMessage(key));
                     element.innerHTML = chrome.i18n.getMessage(key);
-                }
-                else {
+                } else {
+                    console.log("Missing localization key: " + key + ", className=" + element.className)
                     Log.e("Missing localization key: " + key + ", className=" + element.className);
                 }
             }
@@ -187,8 +196,7 @@ var CustomBlockerUtil = (function () {
                 var key = RegExp.$1;
                 if (!!chrome.i18n.getMessage(key)) {
                     element.setAttribute("value", chrome.i18n.getMessage(key));
-                }
-                else {
+                } else {
                     Log.v("CustomBlockerUtil.processPage " + element.getAttribute("value") + "->" + chrome.i18n.getMessage(key));
                 }
             }
@@ -301,13 +309,17 @@ var CustomBlockerUtil = (function () {
     CustomBlockerUtil.getSuggestedSiteRegexp = function () {
         var str = location.href.replace(new RegExp('http(s|)://'), '');
         var metaChars = new RegExp('[\\\\^\\.\\$\\*\\?\\|\\(\\)\\[\\]\\{\\}]', 'g');
-        str = str.replace(metaChars, function (a, b) { return '\\' + a; });
+        str = str.replace(metaChars, function (a, b) {
+            return '\\' + a;
+        });
         return str;
     };
     CustomBlockerUtil.createWordElement = function (word, deleteCallback) {
         var span = CustomBlockerUtil.createSimpleWordElement(word);
         var deleteButton = CustomBlockerUtil.createDeleteButton();
-        deleteButton.addEventListener('click', function () { deleteCallback(span); }, true);
+        deleteButton.addEventListener('click', function () {
+            deleteCallback(span);
+        }, true);
         span.appendChild(deleteButton);
         return span;
     };
@@ -317,7 +329,9 @@ var CustomBlockerUtil = (function () {
         span.innerHTML = group.name;
         var deleteButton = CustomBlockerUtil.createDeleteButton();
         if (group.words.length > 0) {
-            span.title = group.words.map(function (word) { return word.word; }).join(",");
+            span.title = group.words.map(function (word) {
+                return word.word;
+            }).join(",");
         }
         deleteButton.addEventListener('click', deleteCallback, true);
         span.appendChild(deleteButton);
@@ -351,8 +365,7 @@ var CustomBlockerUtil = (function () {
             param.setAttribute('value', 'transparent');
             if ('OBJECT' == embed.parentNode.tagName) {
                 embed.parentNode.appendChild(param);
-            }
-            else {
+            } else {
                 var object = document.createElement('OBJECT');
                 object.appendChild(param);
                 embed.parentNode.appendChild(object);
@@ -388,6 +401,7 @@ CustomBlockerUtil.initialize();
 var Log = (function () {
     function Log() {
     }
+
     Log.initialize = function () {
         Log.VERBOSE = 1;
         Log.DEBUG = 2;
@@ -396,11 +410,21 @@ var Log = (function () {
         Log.ERROR = 5;
         Log.FILTER_LEVEL = Log.WARNING;
     };
-    Log.v = function (message) { Log._write(message, Log.VERBOSE, "v"); };
-    Log.d = function (message) { Log._write(message, Log.DEBUG, "d"); };
-    Log.i = function (message) { Log._write(message, Log.INFO, "i"); };
-    Log.w = function (message) { Log._write(message, Log.WARNING, "w"); };
-    Log.e = function (message) { Log._write(message, Log.ERROR, "e"); };
+    Log.v = function (message) {
+        Log._write(message, Log.VERBOSE, "v");
+    };
+    Log.d = function (message) {
+        Log._write(message, Log.DEBUG, "d");
+    };
+    Log.i = function (message) {
+        Log._write(message, Log.INFO, "i");
+    };
+    Log.w = function (message) {
+        Log._write(message, Log.WARNING, "w");
+    };
+    Log.e = function (message) {
+        Log._write(message, Log.ERROR, "e");
+    };
     Log._write = function (message, level, label) {
         if (level >= Log.FILTER_LEVEL) {
             console.log("[Blocker]\t" + "[" + label + "]\t" + new Date() + "\t" + message);
