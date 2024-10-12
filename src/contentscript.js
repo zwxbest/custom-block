@@ -129,7 +129,19 @@ document.body.oncontextmenu = function (event) {
     lastRightClickEvent = event;
 };
 var needExecBlock = true;
-document.body.addEventListener('DOMNodeInserted', function (event) {
-    needExecBlock = true;
+
+var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        // console.log(mutation.type)
+        if (mutation.type === 'childList') {
+            needExecBlock = true;
+        }
+    });
 });
+var config = { childList: true,  attributes: true,subtree: true};
+observer.observe(document.body, config);
+
+// document.body.addEventListener('DOMNodeInserted', function (event) {
+//     needExecBlock = true;
+// });
 //# sourceMappingURL=contentscript.js.map
