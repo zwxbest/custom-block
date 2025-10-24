@@ -43,12 +43,19 @@ var PrefRuleWrapper = (function () {
         exampleLink.setAttribute("href", this.rule.example_url);
         var favicon = document.createElement('IMG');
         var faviconSrc = (this.rule.example_url) ?
-            'chrome://favicon/' + rule.example_url : chrome.extension.getURL('img/world.png');
+            faviconURL(rule.example_url) : chrome.runtime.getURL('img/world.png');
         favicon.className = 'favicon';
         favicon.setAttribute("src", faviconSrc);
         informationDiv.appendChild(favicon);
         this.liElement.appendChild(this.subLiElement);
         informationDiv.appendChild(exampleLink);
+    }
+
+    function faviconURL(u) {
+        const url = new URL(chrome.runtime.getURL('/_favicon/'));
+        url.searchParams.set('pageUrl', u); // this encodes the URL as well
+        url.searchParams.set('size', '16');
+        return url.toString();
     }
     PrefRuleWrapper.toggleAllCheckboxes = function (sender, wrapperList) {
         var checked = sender.checked;

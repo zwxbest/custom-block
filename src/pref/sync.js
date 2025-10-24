@@ -15,10 +15,10 @@ window.onload = function () {
     })
 
     document.getElementById("btn-download").addEventListener("click", function () {
-        GiteeSync.syncRemoteConfig(() => {
+        GiteeSync.syncRemoteConfig(async () => {
             try {
-                var bgWindow = chrome.extension.getBackgroundPage();
-                bgWindow.reloadLists(true);
+                await chrome.runtime.sendMessage({ command: "reloadLists",changed: 'true' });
+
             } catch (ex) {
                 alert(ex);
             }

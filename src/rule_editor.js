@@ -1,6 +1,8 @@
 var selectedNode = null;
 var origStyle = null;
 var origHref = null;
+
+
 var RuleEditor = (function () {
     function RuleEditor() {
         this.getOnMousedownAction = function () {
@@ -26,6 +28,7 @@ var RuleEditor = (function () {
         };
     }
     RuleEditor.prototype.initialize = function (rule, appliedRuleList) {
+        console.log("RuleEditor.prototype.initialize");
         this.pathPickerEventHandlers = new Array(0);
         this.rule = rule;
         if (!this.rule) {
@@ -252,7 +255,7 @@ var RuleEditor = (function () {
         frameContainer.style.border = '1px solid #888';
         frameContainer.style.boxShadow = "0px 1px 1px rgba(0,0,0,0.5)";
         var iframe = document.createElement("IFRAME");
-        iframe.setAttribute("src", chrome.extension.getURL(chrome.i18n.getMessage('extLocale') + '/rule_editor_frame.html'));
+        iframe.setAttribute("src", chrome.runtime.getURL(chrome.i18n.getMessage('extLocale') + '/rule_editor_frame.html'));
         iframe.setAttribute("scrolling", "no");
         iframe.setAttribute("frameborder", "0");
         iframe.style.width = '400px';
@@ -270,7 +273,7 @@ var RuleEditor = (function () {
         dragger.style.cursor = "move";
         var scope = this;
         var closeIcon = document.createElement("A");
-        closeIcon.style.backgroundImage = "url(" + chrome.extension.getURL("/img/rule_editor_close.png") + ")";
+        closeIcon.style.backgroundImage = "url(" + chrome.runtime.getURL("/img/rule_editor_close.png") + ")";
         closeIcon.style.backgroundRepeat = "no-repeat";
         closeIcon.style.backgroundPosition = "2px 2px";
         closeIcon.style.backgroundSize = "14px 14px";

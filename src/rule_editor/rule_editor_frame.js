@@ -140,10 +140,9 @@ var RuleEditorFrame = (function () {
         this.refreshPathSections();
         this.refreshXPathSelectedStyles();
     };
-    RuleEditorFrame.prototype.reloadBG = function () {
+    RuleEditorFrame.prototype.reloadBG = async  function () {
         try {
-            var bgWindow = chrome.extension.getBackgroundPage();
-            bgWindow.reloadLists(true);
+            await chrome.runtime.sendMessage({ command: "reloadLists",changed: 'true' });
         }
         catch (ex) {
             alert(ex);

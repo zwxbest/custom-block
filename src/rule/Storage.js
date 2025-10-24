@@ -70,7 +70,7 @@ var CustomBlockerStorage = (function () {
     CustomBlockerStorage.prototype.loadAll = function (callback) {
         var scope = this;
         chrome.storage.local.get(null, function (allObj) {
-            console.log(allObj);
+            // console.log(allObj);
             var rules = [];
             var groups = [];
             var groupMap = [];
@@ -127,8 +127,8 @@ var CustomBlockerStorage = (function () {
             scope.disabledRuleIDList.push(rule.global_identifier);
             console.log("disableRule ids=");
             console.log(scope.disabledRuleIDList);
-            chrome.storage.local.set({ disabledRules: scope.disabledRuleIDList }, function () {
-                chrome.extension.getBackgroundPage().reloadLists(false);
+            chrome.storage.local.set({ disabledRules: scope.disabledRuleIDList }, async function () {
+                await chrome.runtime.sendMessage({ command: "reloadLists",changed: 'false' });
                 callback();
             });
         }, true);
@@ -145,8 +145,8 @@ var CustomBlockerStorage = (function () {
             }
             console.log("enableRule ids=");
             console.log(scope.disabledRuleIDList);
-            chrome.storage.local.set({ disabledRules: scope.disabledRuleIDList }, function () {
-                chrome.extension.getBackgroundPage().reloadLists(false);
+            chrome.storage.local.set({ disabledRules: scope.disabledRuleIDList }, async function () {
+                await chrome.runtime.sendMessage({ command: "reloadLists",changed: 'false' });
                 callback();
             });
         }, true);
@@ -425,11 +425,11 @@ var CustomBlockerStorage = (function () {
         return localObj;
     };
     CustomBlockerStorage.prototype.syncRule = function (deviceId, key, oldValue, newValue, onLocalChange) {
-        console.log("Key=%s", key);
-        console.log(oldValue);
-        console.log(newValue);
+        // console.log("Key=%s", key);
+        // console.log(oldValue);
+        // console.log(newValue);
         if (newValue && newValue["ui"] == deviceId) {
-            console.log("Local change.");
+            // console.log("Local change.");
             onLocalChange();
             return;
         }

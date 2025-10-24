@@ -2,17 +2,20 @@ var Popup = (function () {
     function Popup() {
         this.prevHoverRule = null;
     }
-    Popup.prototype.openRuleEditor = function () {
+    Popup.prototype.openRuleEditor = async function () {
         this.removeHighlight();
-        var bgWindow = chrome.extension.getBackgroundPage();
-        bgWindow.openRulePicker(null);
+        // var bgWindow = chrome.extension.getBackgroundPage();
+        // bgWindow.openRulePicker(null);
+        await  chrome.runtime.sendMessage({ command: "openRulePicker" });
         window.close();
     };
-    Popup.prototype.highlightRuleElements = function (rule) {
-        var bgWindow = chrome.extension.getBackgroundPage();
-        bgWindow.highlightRuleElements(rule);
+    Popup.prototype.highlightRuleElements = async function (rule) {
+        // var bgWindow = chrome.extension.getBackgroundPage();
+        // bgWindow.highlightRuleElements(rule);
+        await  chrome.runtime.sendMessage({ command: "highlightRuleElements",rule: rule });
+
     };
-    Popup.prototype.getAppliedRules = function () {
+    Popup.prototype.getAppliedRules =  async function () {
         try {
             CustomBlockerUtil.processPage();
         }
@@ -21,26 +24,41 @@ var Popup = (function () {
             return;
         }
         this.refreshButton();
-        var bgWindow = chrome.extension.getBackgroundPage();
+        // var bgWindow = chrome.extension.getBackgroundPage();
         var scope = this;
-        bgWindow.getAppliedRules(function (list) {
-            try {
-                scope.renderApplierRules(list);
-            }
-            catch (ex) {
-            }
-        });
+        await chrome.runtime.sendMessage({ command: "getAppliedRules2" , test: 'test'});
+        // bgWindow.getAppliedRules(function (list) {
+        //     try {
+        //         scope.renderApplierRules(list);
+        //     }
+        //     catch (ex) {
+        //     }
+        // });
     };
-    Popup.prototype.setBlockOn = function (on) {
-        localStorage.blockDisabled = (on) ? 'false' : 'true';
-        var bgWindow = chrome.extension.getBackgroundPage();
-        bgWindow.setIconDisabled(!on);
+
+    chrome.runtime.onMessage.addListener( async function (request, sender) {
+        if (request.command === "renderApplierRules") {
+            console.log(request.rules)
+            popup.renderApplierRules(request.rules);
+        }
+    })
+
+    Popup.prototype.setBlockOn = async function (on) {
+        var blockvar = on ? 'false': 'true';
+        await chrome.storage.local.set({blockDisabled: blockvar})
+        // var bgWindow = chrome.extension.getBackgroundPage();
+        // bgWindow.setIconDisabled(!on);
+        await chrome.runtime.sendMessage({ command: "setIconDisabled", isDisabled: !on});
         this.refreshButton();
     };
     Popup.prototype.refreshButton = function () {
-        var isDisabled = ('true' == localStorage.blockDisabled);
-        document.getElementById('buttonOn').checked = !isDisabled;
-        document.getElementById('buttonOff').checked = isDisabled;
+        chrome.storage.local.get(["blockDisabled"], function (result) {
+            if (result["blockDisabled"]) {
+                var isDisabled = ('true' == result["blockDisabled"]);
+                document.getElementById('buttonOn').checked = !isDisabled;
+                document.getElementById('buttonOff').checked = isDisabled;
+            }
+            })
     };
     Popup.prototype.getLiMouseoverAction = function (rule) {
         var scope = this;
@@ -51,11 +69,13 @@ var Popup = (function () {
             scope.highlightRuleElements(rule);
         };
     };
-    Popup.prototype.removeHighlight = function () {
+    Popup.prototype.removeHighlight = async function () {
         if (this.prevHoverRule != null) {
             this.prevHoverRule = null;
-            var bgWindow = chrome.extension.getBackgroundPage();
-            bgWindow.highlightRuleElements(null);
+            // var bgWindow = chrome.extension.getBackgroundPage();
+            // bgWindow.highlightRuleElements(null);
+            await chrome.runtime.sendMessage({ command: "highlightRuleElements" });
+
         }
     };
     Popup.prototype.renderApplierRules = function (list) {
@@ -106,10 +126,11 @@ var Popup = (function () {
     };
     Popup.prototype.getEditRuleAction = function (rule) {
         var scope = this;
-        return function () {
+        return async function () {
             scope.removeHighlight();
-            var bgWindow = chrome.extension.getBackgroundPage();
-            bgWindow.openRulePicker(rule);
+            // var bgWindow = chrome.extension.getBackgroundPage();
+            // bgWindow.openRulePicker(rule);
+            await  chrome.runtime.sendMessage({ command: "openRulePicker",rule: rule });
             window.close();
         };
     };
@@ -123,8 +144,8 @@ var Popup = (function () {
     };
     return Popup;
 }());
+var popup = new Popup();
 window.onload = function () {
-    var popup = new Popup();
     popup.getAppliedRules();
     document.getElementById('versionLabel').innerHTML = chrome.runtime.getManifest().version;
     document.getElementById('buttonOn').addEventListener('click', function () { popup.setBlockOn(true); }, false);

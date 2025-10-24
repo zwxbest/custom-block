@@ -21,6 +21,7 @@ var BackgroundCommunicator = (function () {
                 this.execHighlight(request);
                 break;
             case 'ruleEditor':
+                console.log("BackgroundCommunicator.prototype");
                 this.execRuleEditor(request);
                 break;
             case 'ruleSaveDoneRuleSmart':
@@ -106,7 +107,8 @@ var BackgroundCommunicator = (function () {
     };
     return BackgroundCommunicator;
 }());
-chrome.extension.sendRequest({ command: "requestRules" });
+
+
 if (!window.elementHighlighter)
     window.elementHighlighter = new ElementHighlighter();
 if (!window.bgCommunicator) {
@@ -117,7 +119,7 @@ document.addEventListener('visibilitychange', function () {
     window.bgCommunicator.onVisibilityChange(document.hidden);
 });
 
-chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     console.warn("WARNING: Legacy request type.");
     console.warn(request);
     window.bgCommunicator.processBackgroundRequest(request, sender, sendResponse);
@@ -140,6 +142,11 @@ var observer = new MutationObserver(function(mutations) {
 });
 var config = { childList: true,  attributes: true,subtree: true};
 observer.observe(document.body, config);
+
+window.onload = function () {
+    chrome.runtime.sendMessage({ command: "onStartBackground"});
+    chrome.runtime.sendMessage({ command: "requestRules" });
+};
 
 // document.body.addEventListener('DOMNodeInserted', function (event) {
 //     needExecBlock = true;

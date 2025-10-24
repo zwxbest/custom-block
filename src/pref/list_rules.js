@@ -6,9 +6,8 @@ function manualMigration() {
     chrome.storage.local.get(["migrationDone"], function (result) {
         if (!result["migrationDone"]) {
             document.getElementById("manualMigrationSection").style.display = "block";
-            document.getElementById("manualMigrationLink").addEventListener("click", function () {
-                var bgWindow = chrome.extension.getBackgroundPage();
-                bgWindow.manualDataMigration();
+            document.getElementById("manualMigrationLink").addEventListener("click", async function () {
+                await  chrome.runtime.sendMessage({ command: "manualDataMigration" });
             }, false);
         }
     });
@@ -26,20 +25,25 @@ function onStart() {
     document.getElementById('rule_editor_radio_hide_css').addEventListener('change', refreshPathSections, false);
     document.getElementById('buttonBadgeOn').addEventListener('change', refreshBadgeEnabled, false);
     document.getElementById('buttonBadgeOff').addEventListener('change', refreshBadgeEnabled, false);
-    if ("true" == localStorage.badgeDisabled) {
-        document.getElementById('buttonBadgeOff').setAttribute("checked", "true");
-    } else {
-        document.getElementById('buttonBadgeOn').setAttribute("checked", "true");
-    }
+
+    chrome.storage.local.get(["badgeDisabled"], function (result) {
+        if (result["badgeDisabled"]) {
+            if ('true' === result["badgeDisabled"]){
+                document.getElementById('buttonBadgeOff').setAttribute("checked", "true");
+            }else {
+                document.getElementById('buttonBadgeOn').setAttribute("checked", "true");
+            }
+        }
+    })
     ruleEditor = new PrefRuleEditor();
     CustomBlockerUtil.processPage();
     ruleEditor.init();
     window.setTimeout(manualMigration, 1000);
 }
 
-function refreshBadgeEnabled() {
+async function refreshBadgeEnabled() {
     var isBadgeOn = document.getElementById('buttonBadgeOn').checked;
-    localStorage.badgeDisabled = (isBadgeOn) ? "false" : "true";
+    await chrome.storage.local.set({ 'badgeDisabled': (isBadgeOn) ? "false" : "true" });
 }
 
 function showEmptyAlert() {
@@ -129,6 +133,12 @@ function removeElement(element) {
         }
     }
 }
+function faviconURL(u) {
+    const url = new URL(chrome.runtime.getURL('/_favicon/'));
+    url.searchParams.set('pageUrl', u); // this encodes the URL as well
+    url.searchParams.set('size', '16');
+    return url.toString();
+}
 
 var RuleContainer = (function () {
     function RuleContainer(rule) {
@@ -204,12 +214,14 @@ var RuleContainer = (function () {
         informationDiv.appendChild(urlDiv);
         informationDiv.appendChild(keywordsDiv);
         var favicon = document.createElement('IMG');
-        var hrefValue = (this.rule.example_url) ? 'chrome://favicon/' + this.rule.example_url : chrome.extension.getURL('img/world.png');
+        var hrefValue = (this.rule.example_url) ? faviconURL(this.rule.example_url) : chrome.runtime.getURL('img/world.png');
         favicon.setAttribute("src", hrefValue);
         favicon.className = 'favicon';
         informationDiv.appendChild(favicon);
         return this.liElement;
     };
+
+
     RuleContainer.prototype.createDisableBox = function () {
         var span = document.createElement('SPAN');
         var input = document.createElement('INPUT');
@@ -283,10 +295,9 @@ function refreshPathSections() {
     document.getElementById('rule_editor_section_search_css').style.display = (searchByXPath) ? 'none' : 'block';
 }
 ;
-var reloadBackground = function () {
+var reloadBackground = async  function () {
     try {
-        var bgWindow = chrome.extension.getBackgroundPage();
-        bgWindow.reloadLists(true);
+        await  chrome.runtime.sendMessage({ command: "reloadLists",changed: 'true' });
     } catch (ex) {
         alert(ex);
     }

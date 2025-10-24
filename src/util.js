@@ -169,7 +169,7 @@ var CustomBlockerUtil = (function () {
             array.push(elementsToAdd[i]);
         }
     };
-    CustomBlockerUtil.processPage = function () {
+    CustomBlockerUtil.processPage =  function () {
         var tags = [];
         CustomBlockerUtil.addAll(tags, document.getElementsByTagName('SPAN'));
         CustomBlockerUtil.addAll(tags, document.getElementsByTagName('LABEL'));
@@ -204,10 +204,11 @@ var CustomBlockerUtil = (function () {
         var keyPrefix = "customblocker_note_";
         var notes = document.querySelectorAll(".note--dismissable");
         if (notes) {
-            var _loop_1 = function (i_1) {
+            var _loop_1 = async function (i_1) {
                 var note = notes[i_1];
                 var noteKey = keyPrefix + note.getAttribute("note_key");
-                if (localStorage[noteKey] == "true") {
+                const noteKeyVal = (await chrome.storage.local.get('noteKey'))['noteKey']
+                if (noteKeyVal == "true") {
                     return "continue";
                 }
                 note.style.display = "block";
@@ -215,9 +216,9 @@ var CustomBlockerUtil = (function () {
                 for (var j = 0; j < links.length; j++) {
                     var link = links[j];
                     if (link.className.indexOf("note__dismiss" >= 0)) {
-                        link.addEventListener("click", function () {
+                        link.addEventListener("click", async function () {
                             note.style.display = "none";
-                            localStorage[noteKey] = "true";
+                            await chrome.storage.local.set({ 'noteKey': "true" });
                         });
                     }
                 }
@@ -228,7 +229,7 @@ var CustomBlockerUtil = (function () {
         }
     };
     CustomBlockerUtil.showHelp = function (fileName) {
-        window.open(chrome.extension.getURL('/help/' + chrome.i18n.getMessage('extLocale') + '/' + fileName), "help", "top=10,left=10,width=480 height=500 resizable=yes menubar=no, toolbar=no");
+        window.open(chrome.runtime.getURL('/help/' + chrome.i18n.getMessage('extLocale') + '/' + fileName), "help", "top=10,left=10,width=480 height=500 resizable=yes menubar=no, toolbar=no");
     };
     CustomBlockerUtil.trim = function (str) {
         return str.replace(/^[\s　]+|[\s　]+$/g, '');
@@ -236,7 +237,7 @@ var CustomBlockerUtil = (function () {
     CustomBlockerUtil.createKeywordOptionIcon = function (fileName, suffix, tip) {
         var img = document.createElement("IMG");
         img.title = chrome.i18n.getMessage(tip);
-        img.setAttribute("src", chrome.extension.getURL("img/" + fileName + "_" + suffix + ".png"));
+        img.setAttribute("src", chrome.runtime.getURL("img/" + fileName + "_" + suffix + ".png"));
         img.className = "option";
         return img;
     };
@@ -381,7 +382,7 @@ var CustomBlockerUtil = (function () {
                 return;
         }
         var cssNode = document.createElement('LINK');
-        cssNode.setAttribute("href", chrome.extension.getURL(path));
+        cssNode.setAttribute("href", chrome.runtime.getURL(path));
         cssNode.setAttribute("rel", "stylesheet");
         cssNode.className = CustomBlockerUtil.CSS_CLASS;
         document.getElementsByTagName('HEAD')[0].appendChild(cssNode);

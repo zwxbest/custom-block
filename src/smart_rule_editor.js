@@ -53,7 +53,7 @@ var SmartRuleCreator = (function () {
         this.loadingImageDiv.style.top = lastRightClickEvent.clientY + document.body.scrollTop + "px";
         this.loadingImageDiv.style.backgroundColor = "white";
         var loadingImage = document.createElement('IMG');
-        loadingImage.setAttribute("src", chrome.extension.getURL('/img/loading.gif'));
+        loadingImage.setAttribute("src", chrome.runtime.getURL('/img/loading.gif'));
         this.loadingImageDiv.appendChild(loadingImage);
         document.body.appendChild(this.loadingImageDiv);
     };
@@ -118,7 +118,7 @@ var SmartRuleCreatorDialog = (function () {
         helpLink.addEventListener('click', CustomBlockerUtil.getShowHelpAction(helpLink.getAttribute("href")), false);
         helpLink.setAttribute("href", 'javascript:void(0)');
         document.getElementById('smart_rule_editor_body').style.display = 'none';
-        document.getElementById('smart_rule_editor_path_img').setAttribute("src", chrome.extension.getURL('/img/smart_path_preview_img.png'));
+        document.getElementById('smart_rule_editor_path_img').setAttribute("src", chrome.runtime.getURL('/img/smart_path_preview_img.png'));
         this.advancedSectionVisible = false;
         document.getElementById('smart_rule_editor_save').addEventListener('click', this.getSaveAction(), true);
         document.getElementById('smart_rule_editor_cancel').addEventListener('click', this.getCancelAction(), true);

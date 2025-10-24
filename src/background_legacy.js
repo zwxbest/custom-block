@@ -47,12 +47,12 @@ function migrateToChromeSync(onMingrationDone) {
     });
 }
 chrome.runtime.onInstalled.addListener(function (details) {
-    if (details.reason == "install") {
+    if (details.reason === "install") {
         chrome.storage.local.set({ migrationDone: true }, function () {
             console.log("Migration flag set.");
         });
     }
-    else if (details.reason == "update") {
+    else if (details.reason === "update") {
         console.log("DATA MIGRATION NEEDED? Checking...");
         chrome.storage.local.get(["migrationDone"], function (result) {
             if (!result["migrationDone"]) {
@@ -76,4 +76,11 @@ function manualDataMigration() {
         });
     });
 }
+
+chrome.runtime.onMessage.addListener(function (request, sender) {
+    if (request.command === "manualDataMigration") {
+        manualDataMigration()
+    }
+});
+
 //# sourceMappingURL=background_legacy.js.map

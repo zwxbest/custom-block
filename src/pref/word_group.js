@@ -85,10 +85,11 @@ var WordGroupPage = (function () {
         var _this = this;
         var message = chrome.i18n.getMessage('wordGroupDelete').replace("___GROUP___", group.name);
         if (window.confirm(message)) {
-            cbStorage.deleteWordGroup(group, function () {
+            cbStorage.deleteWordGroup(group, async function () {
                 try {
-                    var bgWindow = chrome.extension.getBackgroundPage();
-                    bgWindow.reloadLists(true);
+
+                    await chrome.runtime.sendMessage({ command: "reloadLists",changed: 'true' });
+
                 }
                 catch (ex) {
                     alert(ex);
@@ -119,12 +120,12 @@ var WordGroupEditor = (function () {
                     return;
                 }
                 self.group.name = self.uiTitle.value;
-                cbStorage.saveWordGroup(self.group, function () {
+                cbStorage.saveWordGroup(self.group, async function () {
                     console.log("Group was saved. name=" + self.group.name);
                     try {
-                        var bgWindow = chrome.extension.getBackgroundPage();
+
                         self.showMessage(chrome.i18n.getMessage('wordGroupSaveDone'));
-                        bgWindow.reloadLists(true);
+                        await chrome.runtime.sendMessage({ command: "reloadLists",changed: 'true' });
                     }
                     catch (ex) {
                         alert(ex);

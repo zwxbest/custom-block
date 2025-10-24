@@ -1,3 +1,4 @@
+var tabMapRule = {}
 var RuleExecutor = (function () {
     function RuleExecutor() {
     }
@@ -28,6 +29,8 @@ var RuleExecutor = (function () {
         if (rules.length > 0) {
             RuleExecutor.startBlocking();
         }
+        // 如果屏蔽数量为0，更新成没有
+        window.bgCommunicator.sendRequest('badge', { rules: rules, count: RuleExecutor.blockedCount });
     };
     RuleExecutor.startBlocking = function () {
         var _loop_1 = function (rule) {
@@ -210,14 +213,15 @@ var RuleExecutor = (function () {
             node = searchNodes_2[_a];
             node.containsNgWord = false;
         }
-        var appliedWords = [];
+         var appliedWords = [];
         for (var key in rule.appliedWordsMap) {
             appliedWords.push({ word: key, count: rule.appliedWordsMap[key] });
         }
         rule.appliedWords = appliedWords;
-        if (needRefreshBadge && RuleExecutor.blockedCount > 0) {
-            window.bgCommunicator.sendRequest('badge', { rules: rules, count: RuleExecutor.blockedCount });
-        }
+        window.bgCommunicator.sendRequest('badge', { rules: rules, count: RuleExecutor.blockedCount });
+        // if (needRefreshBadge && RuleExecutor.blockedCount > 0) {
+        //
+        // }
     };
     RuleExecutor.findFlaggedChild = function (hideNode, list) {
         for (var i = 0, l = list.length; i < l; i++) {

@@ -30,6 +30,8 @@ var GiteeSync = (function () {
                         chrome.storage.local.get(null, function (allObj) {
                             //disabledRules用本地的覆盖
                             obj.disabledRules = allObj.disabledRules;
+                            obj.blockDisabled = allObj.blockDisabled;
+                            obj.badgeDisabled = allObj.badgeDisabled;
                             // 清除本地已有的
                             chrome.storage.local.clear()
                             obj.gitee = giteeobj;//把配置信息还原

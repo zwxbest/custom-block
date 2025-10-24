@@ -74,14 +74,13 @@ var Welcome = (function () {
         }
         let count = 0;
         for (var i = 0; i < rulesToUse.length; i++) {
-            cbStorage.saveRule(rulesToUse[i].rule, () => {
+            cbStorage.saveRule(rulesToUse[i].rule, async () => {
                 count = count + 1;
                 if (count === rulesToUse.length) {
                     alert("安装成功")
                     //全部安装完成再刷新
                     try {
-                        var bgWindow = chrome.extension.getBackgroundPage();
-                        bgWindow.reloadLists(true);
+                        await chrome.runtime.sendMessage({ command: "reloadLists",changed: 'true' });
                     } catch (ex) {
                         alert(ex);
                     }
@@ -99,6 +98,14 @@ var Welcome = (function () {
     };
     return Welcome;
 }());
+
+function faviconURL(u) {
+    const url = new URL(chrome.runtime.getURL('/_favicon/'));
+    url.searchParams.set('pageUrl', u); // this encodes the URL as well
+    url.searchParams.set('size', '16');
+    return url.toString();
+}
+
 var SiteWrapper = (function () {
     function SiteWrapper(site) {
         this.setChecked = function (checked) {
@@ -133,7 +140,7 @@ var SiteWrapper = (function () {
         li.appendChild(checkbox);
         var favicon = document.createElement('IMG');
         favicon.setAttribute("src", (this.site.url) ?
-            'chrome://favicon/' + this.site.url : chrome.extension.getURL('img/world.png'));
+            faviconURL(this.site.url) : chrome.runtime.getURL('img/world.png'));
         li.appendChild(favicon);
         var titleLabel = document.createElement('SPAN');
         titleLabel.appendChild(document.createTextNode(this.site.name));

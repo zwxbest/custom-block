@@ -11,12 +11,13 @@ function getCustomBlockerSrcPath() {
 (function () {
     var scriptPath = getCustomBlockerSrcPath();
     var files = [
+
         "rule/Storage.js",  "rule/Rule.js", "rule/Word.js", "rule/WordGroup.js", "util.js", "uuid.js","base64.js","gitee_sync.js"
     ];
     for (var _i = 0, files_1 = files; _i < files_1.length; _i++) {
         var file = files_1[_i];
         var path = scriptPath[0] + file;
-        var tag = document.createElement("SCRIPT");
+        var tag =  window.document.createElement("SCRIPT");
         tag.setAttribute("src", path);
         tag.setAttribute("type", "text/javascript");
         tag.setAttribute("extension", "CustomBlocker");

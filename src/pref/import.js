@@ -92,7 +92,7 @@ var Import = (function () {
         Import.savingWordIndex = 0;
         Import.saveRule();
     };
-    Import.saveRule = function () {
+    Import.saveRule =async function () {
         var rule = null;
         while (rule == null && Import.savingRuleIndex < Import.list.length) {
             var _rule = Import.list[Import.savingRuleIndex];
@@ -106,8 +106,7 @@ var Import = (function () {
             alert(chrome.i18n.getMessage('importDone'));
             document.getElementById('button_import').disabled = false;
             try {
-                var bgWindow = chrome.extension.getBackgroundPage();
-                bgWindow.reloadLists(true);
+                 await chrome.runtime.sendMessage({ command: "reloadLists",changed: 'true' });
             }
             catch (ex) {
                 alert(ex);
