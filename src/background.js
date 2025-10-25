@@ -5,6 +5,7 @@ var ruleList = [];
 
 function onStartBackground() {
     // updateDbIfNeeded(createRuleTable);
+    console.log("onStartBackground")
     reloadLists(false);
     GiteeSync.syncRemoteConfig(null,null)
 }
@@ -73,7 +74,6 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     console.log(changeInfo)
     if (changeInfo.url) {
-        console.log("chrome.tabs.onUpdated")
         updateUrl(tab.id, null, tab);
     }
 });

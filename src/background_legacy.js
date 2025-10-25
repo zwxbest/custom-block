@@ -7,7 +7,7 @@ function createRuleTable() {
 function loadLists() {
     cbStorage.loadAll(function (rules, groups) {
         ruleList = rules;
-        loadSmartRuleEditorSrc();
+        // loadSmartRuleEditorSrc();
     });
 }
 function syncAll(rulesToSync, callback) {
