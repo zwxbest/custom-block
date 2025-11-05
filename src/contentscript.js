@@ -43,11 +43,14 @@ var BackgroundCommunicator = (function () {
     };
     BackgroundCommunicator.prototype.execInit = function (request) {
         var allRules = request.rules;
-        if (window.customBlockerInitDone)
-            return;
-        window.customBlockerInitDone = true;
-        rules = new Array();
-        RuleExecutor.checkRules(allRules);
+        if (allRules && allRules.length > 0) {
+            if (window.customBlockerInitDone)
+                return;
+            window.customBlockerInitDone = true;
+            rules = new Array();
+            RuleExecutor.checkRules(allRules);
+        }
+
     };
     BackgroundCommunicator.prototype.execHighlight = function (request) {
         window.elementHighlighter.highlightRule(request.rule);
@@ -145,7 +148,7 @@ observer.observe(document.body, config);
 
 window.onload = function () {
     chrome.runtime.sendMessage({ command: "onStartBackground"});
-    chrome.runtime.sendMessage({ command: "requestRules" });
+    // chrome.runtime.sendMessage({ command: "requestRules" });
 };
 
 // document.body.addEventListener('DOMNodeInserted', function (event) {

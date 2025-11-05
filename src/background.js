@@ -29,7 +29,13 @@ function addToExistingTabList(tabIdToAdd) {
 }
 
 function reloadLists(changed) {
-    loadLists();
+    loadLists(function (){
+        chrome.tabs.query({ active: true }, function (tabs) {
+            let tab = tabs[0]
+            tabOnUpdate(tab.id, null, tab);
+
+        });
+    });
     if (changed) {
         GiteeSync.uploadConfig(null, null, null)
     }
@@ -79,8 +85,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender) {
-    if (request.command == "requestRules") {
-        console.log("tabOnUpdate")
+    if (request.command === "requestRules") {
         tabOnUpdate(sender.tab.id, null, sender.tab);
     }
 });
@@ -115,7 +120,7 @@ var CustomBlockerTab = (function () {
         var count = param.count;
         try {
             var badgeText = '' + count ;
-            if (count == 0){
+            if (count === 0){
                 badgeText = "";
             }
             tabBadgeMap[this.tabId] = badgeText;
@@ -176,6 +181,7 @@ var CustomBlockerTab = (function () {
 }());
 var tabMap = {};
 var tabOnUpdate = async function (tabId, changeInfo, tab) {
+    console.log("tabOnUpdate")
     addToExistingTabList(tabId);
     var isDisabled = ('true' === (await chrome.storage.local.get('blockDisabled'))['blockDisabled']);
     _setIconDisabled(isDisabled, tabId);
@@ -184,7 +190,10 @@ var tabOnUpdate = async function (tabId, changeInfo, tab) {
     }
     var url = tab.url;
     if (isValidURL(url)) {
-         tabMap[tabId] = new CustomBlockerTab(tabId, tab);
+        tabMap[tabId] = new CustomBlockerTab(tabId, tab);
+        // if (!tabMap[tabId]) {
+        //     tabMap[tabId] = new CustomBlockerTab(tabId, tab);
+        // }
         tabMap[tabId].postMessage({
             command: 'init',
             rules: ruleList,
@@ -262,6 +271,8 @@ async function getAppliedRules2() {
     try {
         let tab = tabs[0];
         var appliedRules = (tabMap[tab.id]) ? tabMap[tab.id].appliedRules : [];
+        console.log("getAppliedRules2");
+        console.log(appliedRules);
         return appliedRules;
     } catch (ex) {
         console.log(ex);

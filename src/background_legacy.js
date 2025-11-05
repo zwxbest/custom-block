@@ -4,9 +4,10 @@ function createRuleTable() {
         LegacyWordPeer.getInstance().createTable(loadLists);
     });
 }
-function loadLists() {
+function loadLists(callback) {
     cbStorage.loadAll(function (rules, groups) {
         ruleList = rules;
+        callback();
         // loadSmartRuleEditorSrc();
     });
 }

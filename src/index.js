@@ -38,6 +38,7 @@ var Popup = (function () {
 
     chrome.runtime.onMessage.addListener( async function (request, sender) {
         if (request.command === "renderApplierRules") {
+            console.log("renderApplierRules")
             console.log(request.rules)
             popup.renderApplierRules(request.rules);
         }
