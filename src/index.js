@@ -26,7 +26,9 @@ var Popup = (function () {
         this.refreshButton();
         // var bgWindow = chrome.extension.getBackgroundPage();
         var scope = this;
-        await chrome.runtime.sendMessage({ command: "getAppliedRules2" , test: 'test'});
+        var tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+        var tabId = (tabs && tabs[0]) ? tabs[0].id : null;
+        await chrome.runtime.sendMessage({ command: "getAppliedRules2" , tabId: tabId});
         // bgWindow.getAppliedRules(function (list) {
         //     try {
         //         scope.renderApplierRules(list);

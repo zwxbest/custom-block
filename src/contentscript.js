@@ -39,6 +39,14 @@ var BackgroundCommunicator = (function () {
             case 'quickRuleCreation':
                 this.execQuickRuleCreation(request);
                 break;
+            case 'requestAppliedRules':
+                this.execRequestAppliedRules(request, sendResponse);
+                break;
+        }
+    };
+    BackgroundCommunicator.prototype.execRequestAppliedRules = function (request, sendResponse) {
+        if (sendResponse) {
+            sendResponse({ rules: rules || [] });
         }
     };
     BackgroundCommunicator.prototype.execInit = function (request) {
@@ -129,10 +137,19 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 var lastRightClickedElement = null;
 var lastRightClickEvent = null;
-document.body.oncontextmenu = function (event) {
-    lastRightClickedElement = event.srcElement;
-    lastRightClickEvent = event;
-};
+function bindContextMenu() {
+    document.body.oncontextmenu = function (event) {
+        lastRightClickedElement = event.srcElement;
+        lastRightClickEvent = event;
+    };
+}
+// document_start 注入时 <body> 可能尚未创建
+if (document.body) {
+    bindContextMenu();
+}
+else {
+    document.addEventListener('DOMContentLoaded', bindContextMenu);
+}
 var needExecBlock = true;
 
 var observer = new MutationObserver(function(mutations) {
@@ -144,12 +161,12 @@ var observer = new MutationObserver(function(mutations) {
     });
 });
 var config = { childList: true,  attributes: true,subtree: true};
-observer.observe(document.body, config);
+// document_start 注入时 <body> 可能尚未创建，监听整个文档
+observer.observe(document.documentElement || document, config);
 
-window.onload = function () {
-    chrome.runtime.sendMessage({ command: "onStartBackground"});
-    // chrome.runtime.sendMessage({ command: "requestRules" });
-};
+// 立即申请规则，不再等待 window.onload
+chrome.runtime.sendMessage({ command: "requestRules" });
+chrome.runtime.sendMessage({ command: "onStartBackground"});
 
 // document.body.addEventListener('DOMNodeInserted', function (event) {
 //     needExecBlock = true;

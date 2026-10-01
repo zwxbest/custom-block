@@ -266,21 +266,50 @@ function getAppliedRules(callback) {
     });
 }
 
-async function getAppliedRules2() {
-    var tabs = await chrome.tabs.query({active: true});
+// Service Worker 被回收后 tabMap 会丢失，此时重新连接内容脚本并取回当前实际生效的规则
+async function restoreTabInfo(tab) {
+    var response = await chrome.tabs.sendMessage(tab.id, { command: 'requestAppliedRules' });
+    if (!response || !response.rules) {
+        return null;
+    }
     try {
-        let tab = tabs[0];
-        var appliedRules = (tabMap[tab.id]) ? tabMap[tab.id].appliedRules : [];
-        console.log("getAppliedRules2");
-        console.log(appliedRules);
-        return appliedRules;
+        if (!tabMap[tab.id] && isValidURL(tab.url)) {
+            tabMap[tab.id] = new CustomBlockerTab(tab.id, tab);
+        }
+        if (tabMap[tab.id]) {
+            tabMap[tab.id].appliedRules = response.rules;
+        }
     } catch (ex) {
         console.log(ex);
+    }
+    return response.rules;
+}
+
+async function getAppliedRules2(tabId) {
+    try {
+        let tab = (tabId != null) ? await chrome.tabs.get(tabId) : (await chrome.tabs.query({active: true}))[0];
+        if (!tab) {
+            return [];
+        }
+        var appliedRules = (tabMap[tab.id]) ? tabMap[tab.id].appliedRules : [];
+        if (!appliedRules || appliedRules.length === 0) {
+            try {
+                appliedRules = await restoreTabInfo(tab);
+            } catch (ex) {
+                console.log(ex);
+            }
+        }
+        console.log("getAppliedRules2");
+        console.log(appliedRules);
+        return appliedRules || [];
+    } catch (ex) {
+        console.log(ex);
+        return [];
     }
 }
 chrome.runtime.onMessage.addListener( async function (request, sender) {
     if (request.command === "getAppliedRules2") {
-        let  appliedRules2 = await getAppliedRules2()
+        let  appliedRules2 = await getAppliedRules2(request.tabId)
         await chrome.runtime.sendMessage({ command: "renderApplierRules",rules:appliedRules2 });
     }
 });

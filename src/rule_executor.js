@@ -112,6 +112,9 @@ var RuleExecutor = (function () {
         }
     };
     RuleExecutor.execBlock = function () {
+        if (RuleExecutor.styleTagNotAttached) {
+            RuleExecutor.appendStyleTag();
+        }
         if (!needExecBlock) {
             return;
         }
@@ -313,9 +316,20 @@ var RuleExecutor = (function () {
         if (RuleExecutor.styleTag == null) {
             RuleExecutor.styleTag = document.createElement('STYLE');
             RuleExecutor.styleTag.type = 'text/css';
-            document.getElementsByTagName('HEAD')[0].appendChild(RuleExecutor.styleTag);
+            RuleExecutor.appendStyleTag();
         }
         RuleExecutor.styleTag.innerHTML = RuleExecutor.styleTag.innerHTML + (xpath + '{display:none;}');
+    };
+    RuleExecutor.appendStyleTag = function () {
+        // document_start 注入时 <head> 可能尚未创建
+        var parentNode = document.head || document.documentElement;
+        if (parentNode) {
+            parentNode.appendChild(RuleExecutor.styleTag);
+            RuleExecutor.styleTagNotAttached = false;
+        }
+        else {
+            RuleExecutor.styleTagNotAttached = true;
+        }
     };
     return RuleExecutor;
 }());
